@@ -5,6 +5,14 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import '../../../node_modules/leaflet/dist/images/marker-icon.png';
 import { StoreInfo } from '../../utils/store';
+import { icon, Icon, point } from 'leaflet';
+import maimarker from '../../resources/markers/mai.png';
+import gigomarker from '../../resources/markers/gigo.png';
+import namcomarker from '../../resources/markers/namco.png';
+import palomarker from '../../resources/markers/palo.png';
+import r1marker from '../../resources/markers/r1.png';
+import rakuichimarker from '../../resources/markers/rakuichi.png';
+import taitomarker from '../../resources/markers/taito.png';
 
 interface P {
   storesInfo: StoreInfo[];
@@ -12,6 +20,26 @@ interface P {
 
 export default (props: P) => {
   useEffect(() => {}, []);
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'gigo':
+        return gigomarker;
+      case 'namco':
+        return namcomarker;
+      case 'palo':
+        return palomarker;
+      case 'r1':
+        return r1marker;
+      case 'rakuichi':
+        return rakuichimarker;
+      case 'taito':
+        return taitomarker;
+
+      default:
+        return maimarker;
+    }
+  };
 
   return (
     <>
@@ -24,7 +52,7 @@ export default (props: P) => {
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {props.storesInfo.map(storeInfo => {
             return (
-              <Marker position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name}>
+              <Marker position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
                 <Popup>
                   <p id="storepopup_title">{storeInfo.name}</p>
                   <p>{storeInfo.address}</p>
