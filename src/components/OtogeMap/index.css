@@ -1,0 +1,21 @@
+#search_container {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 114514;
+}
+
+#search_container input {
+  width: 200px;
+  padding: 5px;
+}
+
+#storepopup_title{
+  font-size: large;
+  font-weight: bold;
+}

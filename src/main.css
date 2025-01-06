@@ -1,0 +1,64 @@
+header {
+  border-color: black;
+  border-left-width: 3px;
+  border-top-width: 3px;
+  border-right-width: 3spx;
+  border-bottom-width: 3px;
+  border-style: solid;
+
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  border-color: black;
+  border-left-width: 3px;
+  border-top-width: 0px;
+  border-right-width: 3px;
+  border-bottom-width: 3px;
+  border-style: solid;
+}
+
+#headertitle {
+  font-size: 20px;
+  font-weight:bold;
+}
+
+menu {
+  display: flex;
+  gap: 10px;
+}
+menu button {
+  background-color: white;
+
+  border-color: black;
+  border-width: 3px;
+  border-style: solid;
+  font-size: large;
+
+  cursor: pointer;
+  user-select: none;
+}
+@media (any-hover: hover) {
+  menu button:hover {
+    border-left-width: 2px;
+    border-top-width: 2px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+  }
+}
+menu button:active {
+  border-left-width: 4px;
+  border-top-width: 4px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  background-color: rgb(241, 241, 241);
+}
+
+menu button.select {
+  border-left-width: 4px;
+  border-top-width: 4px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  background-color: rgb(241, 241, 241);
+}

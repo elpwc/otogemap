@@ -2,6 +2,8 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
+import OtogeMap from '../../components/OtogeMap';
+import MAIMAIDX_DATA_JA from '../../data/maimaidx_data_ja.json'
 
 interface P {}
 
@@ -17,6 +19,6 @@ export default (props: P) => {
   }, []);
 
   return <>
-  
+    <OtogeMap storesInfo={MAIMAIDX_DATA_JA}/>
   </>;
 };

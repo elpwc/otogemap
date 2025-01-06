@@ -18,8 +18,8 @@ export default (props: P) => {
   }, []);
 
   return (
-    <>
-      <OtogeMap />
-    </>
+    <div>
+      
+    </div>
   );
 };
