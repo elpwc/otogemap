@@ -100,10 +100,6 @@ export const GAME_CENTER_LIST = [
     id: "sapura",
   },
   {
-    name: "アミュージアム",
-    id: "amuseum",
-  },
-  {
     name: "テクモピア",
     id: "tekumopia",
   },
