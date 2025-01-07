@@ -58,7 +58,26 @@ select {
   background-color: rgb(197, 197, 197);
 }
 
-.businessTime{
+.businessTime {
+}
+.arcadeAmount {
+}
+.popupItem {
   font-size: 15px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.popupItem p{
+  margin: 10px 0 !important;
+}
+
+.editButton {
+  height: min-content;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  color: #2d72d2;
 }

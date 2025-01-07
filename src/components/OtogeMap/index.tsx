@@ -167,7 +167,10 @@ export default (props: P) => {
                 <Popup>
                   <p id="storepopup_title">{storeInfo.name}</p>
                   <p>{storeInfo.address}</p>
-                  <p className="businessTime">
+                  <a href={storeInfo.mapURL} target="_blank">
+                    <p>観於Google Map</p>
+                  </a>
+                  <div className="businessTime popupItem">
                     {storeInfo.business_hours_start === -1 && storeInfo.business_hours_end === -1 ? (
                       <p>営業時間未知</p>
                     ) : (
@@ -177,10 +180,34 @@ export default (props: P) => {
                         {storeInfo.business_hours_end.toString().padStart(2, '0')}:{storeInfo.business_minute_end.toString().padStart(2, '0')}
                       </p>
                     )}
-                  </p>
-                  <a href={storeInfo.mapURL} target="_blank">
-                    <p>開於Google Map</p>
-                  </a>
+                    <button className="editButton">編集</button>
+                  </div>
+                  <div className="arcadeAmount popupItem">
+                    {storeInfo.arcade_amount === -1 ? (
+                      <p>筐体数量未知</p>
+                    ) : (
+                      <p>
+                        筐体数量：
+                        {storeInfo.arcade_amount}台
+                      </p>
+                    )}
+                    <button
+                      className="editButton"
+                      onClick={() => {
+                        const amount = prompt('筐体数量：', storeInfo.arcade_amount.toString());
+                      }}
+                    >
+                      編集
+                    </button>
+                  </div>
+                  <div>
+                    <div className="popupItem">
+                      <p>備考</p>
+                      <button className="editButton">編集</button>
+                    </div>
+
+                    <p style={{ margin: '0' }}>{storeInfo.arcade_amount}</p>
+                  </div>
                 </Popup>
               </Marker>
             );

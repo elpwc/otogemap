@@ -17,11 +17,11 @@ function App() {
           <Route path="mamadx"></Route>
           <Route path="mamadx/ja" element={<MapPage game={Game.maimaidx} version={GameVersion.ja} />}></Route>
           <Route path="mamadx/inter" element={<MapPage game={Game.maimaidx} version={GameVersion.inter} />}></Route>
-          
+
           <Route path="chuni"></Route>
           <Route path="chuni/ja" element={<MapPage game={Game.chuni} version={GameVersion.ja} />}></Route>
           <Route path="chuni/inter" element={<MapPage game={Game.chuni} version={GameVersion.ja} />}></Route>
-          
+
           <Route path="ongk" element={<MapPage game={Game.ongeki} />}></Route>
 
           <Route path="about" element={<About />}></Route>
