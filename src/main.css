@@ -65,8 +65,8 @@ menu button {
   menu button:hover {
     border-left-width: 2px;
     border-top-width: 2px;
-    border-right-width: 5px;
-    border-bottom-width: 5px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
   }
 }
 menu button:active {

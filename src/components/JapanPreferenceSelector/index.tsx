@@ -1,154 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import './index.css';
 
-interface P {}
+interface P {
+  defaultValue: string;
+  onChange: (pref: string) => void;
+}
 
-const PrefBox = (props: { prefInfo: any; parentHeight: number; parentWidth: number }) => {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        borderWidth: '1px',
-        borderColor: 'black',
-        borderStyle: 'solid',
-        top: (props.parentHeight * props.prefInfo.top) / 100 + 'px',
-        height: (props.parentHeight * props.prefInfo.height) / 100 + 'px',
-        left: (props.parentHeight * props.prefInfo.left) / 100 + 'px',
-        width: (props.parentHeight * props.prefInfo.width) / 100 + 'px',
-        fontSize:'10px'
-      }}
-    >
-      <p>{props.prefInfo.nameja}</p>
-    </div>
-  );
-};
+const PREF_LIST = [
+  { name: '北海道地方', prefs: ['北海道'] },
+  { name: '東北地方', prefs: ['青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県'] },
+  { name: '関東地方', prefs: ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県'] },
+  { name: '甲信越地方', prefs: ['山梨県', '長野県', '新潟県'] },
+  { name: '北陸地方', prefs: ['富山県', '石川県', '福井県'] },
+  { name: '東海地方', prefs: ['岐阜県', '静岡県', '愛知県', '三重県'] },
+  { name: '近畿地方', prefs: ['滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県'] },
+  { name: '中国地方', prefs: ['鳥取県', '島根県', '岡山県', '広島県', '山口県'] },
+  { name: '四国地方', prefs: ['徳島県', '香川県', '愛媛県', '高知県'] },
+  { name: '九州地方', prefs: ['福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県'] },
+  { name: '沖縄地方', prefs: ['沖縄県'] },
+];
 
 export default (props: P) => {
-  const prefs = [
-    {
-      id: 0,
-      nameja: '北海道',
-      namekana: 'ほっかいどう',
-      nameen: 'Hokkaidō',
-      namezhcn: '北海道',
-      namezhtw: '北海道',
-      namekr: '홋카이도',
-      area: '北海道地方',
-      left: 65,
-      top: 3,
-      width: 17,
-      height: 13,
-    },
-    {
-      id: 1,
-      nameja: '青森県',
-      namekana: 'あおもりけん',
-      nameen: 'Aomori',
-      namezhcn: '青森县',
-      namezhtw: '青森縣',
-      namekr: '아오모리현',
-      area: '東北地方',
-      left: 65,
-      top: 20,
-      width: 12,
-      height: 5,
-    },
-    {
-      id: 2,
-      nameja: '岩手県',
-      namekana: 'いわてけん',
-      nameen: 'Iwate',
-      namezhcn: '岩手县',
-      namezhtw: '岩手縣',
-      namekr: '이와테현',
-      area: '東北地方',
-      left: 71,
-      top: 25,
-      width: 6,
-      height: 6,
-    },
-    {
-      id: 3,
-      nameja: '宮城県',
-      namekana: 'みやぎけん',
-      nameen: 'Miyagi',
-      namezhcn: '宫城县',
-      namezhtw: '宮城縣',
-      namekr: '미야기현',
-      area: '東北地方',
-      left: 71,
-      top: 31,
-      width: 6,
-      height: 7,
-    },
-    {
-      id: 4,
-      nameja: '東京都',
-      namekana: 'とうきょうと',
-      nameen: 'Tokyo',
-      namezhcn: '东京都',
-      namezhtw: '東京都',
-      namekr: '도쿄도',
-      area: '関東地方',
-      left: 35,
-      top: 40,
-      width: 5,
-      height: 5,
-    },
-    {
-      id: 5,
-      nameja: '大阪府',
-      namekana: 'おおさかふ',
-      nameen: 'Osaka',
-      namezhcn: '大阪府',
-      namezhtw: '大阪府',
-      namekr: '오사카부',
-      area: '近畿地方',
-      left: 45,
-      top: 70,
-      width: 10,
-      height: 10,
-    },
-    {
-      id: 6,
-      nameja: '京都府',
-      namekana: 'きょうとふ',
-      nameen: 'Kyoto',
-      namezhcn: '京都府',
-      namezhtw: '京都府',
-      namekr: '교토부',
-      area: '近畿地方',
-      left: 50,
-      top: 65,
-      width: 10,
-      height: 10,
-    },
-    {
-      id: 7,
-      nameja: '沖縄県',
-      namekana: 'おきなわけん',
-      nameen: 'Okinawa',
-      namezhcn: '冲绳县',
-      namezhtw: '沖繩縣',
-      namekr: '오키나와현',
-      area: '九州地方',
-      left: 15,
-      top: 95,
-      width: 10,
-      height: 5,
-    },
-  ];
+  const [selectedPref, setselectedPref] = useState(props.defaultValue ?? 'all');
+  const [isOpen, setisOpen] = useState(false);
+
+  const toggleDropdown = () => setisOpen(!isOpen);
 
   useEffect(() => {}, []);
 
   return (
-    <>
-      <div style={{height: '500px', width: '500px'}}>
-        {prefs.map(pref => {
-          return <PrefBox prefInfo={pref} parentHeight={500} parentWidth={500} />;
-        })}
-      </div>
-    </>
+    <div className="prefSelector">
+      <button className="dropTrigger" onClick={toggleDropdown}>
+        <span>{selectedPref === 'all' ? '全国' : selectedPref}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="chihouContainer">
+          <button
+            className={'prefButton singleButton'}
+            onClick={() => {
+              setselectedPref('all');
+              props.onChange('all');
+              setisOpen(false);
+            }}
+          >
+            全国
+          </button>
+          {PREF_LIST.map(chihou => {
+            return (
+              <div className="">
+                <p className="chihouName">{chihou.name}</p>
+                <div className="prefButtonsContainer">
+                  {chihou.prefs.map((pref, i) => {
+                    return (
+                      <button
+                        className={'prefButton ' + (chihou.prefs.length === 1 ? 'singleButton' : (i === 0 ? 'groupFirst ' : '') + (i === chihou.prefs.length - 1 ? 'groupLast ' : ''))}
+                        onClick={() => {
+                          setselectedPref(pref);
+                          props.onChange(pref);
+                          setisOpen(false);
+                        }}
+                      >
+                        {pref}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import { AttributionControl, MapContainer, Marker, Popup, ScaleControl, TileLayer, useMap, ZoomControl } from 'react-leaflet';
+import { AttributionControl, MapContainer, Marker, Popup, ScaleControl, TileLayer } from 'react-leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import '../../../node_modules/leaflet/dist/images/marker-icon.png';
 import { StoreInfo } from '../../utils/store';
-import { icon, Icon, point } from 'leaflet';
+import { icon, point } from 'leaflet';
 import maimarker from '../../resources/markers/mai.png';
 import gigomarker from '../../resources/markers/gigo.png';
 import namcomarker from '../../resources/markers/namco.png';
@@ -15,9 +15,9 @@ import rakuichimarker from '../../resources/markers/rakuichi.png';
 import taitomarker from '../../resources/markers/taito.png';
 import LeafletLocateControl from '../LeafletLocateControl';
 import JapanPreferenceSelector from '../JapanPreferenceSelector';
-import { MultiSelect } from 'react-multi-select-component';
 import { motion } from 'framer-motion';
 import TimePicker from '../TimePicker';
+import { GAME_CENTER_LIST } from '../../data/game_center_list';
 
 interface P {
   storesInfo: StoreInfo[];
@@ -25,10 +25,13 @@ interface P {
 
 export default (props: P) => {
   useEffect(() => {}, []);
-  const [selected, setSelected] = useState([]);
   const [filterOpen, setfilterOpen] = useState(true);
   const [businessStartTime, setbusinessStartTime] = useState(0);
   const [businessEndTime, setbusinessEndTime] = useState(24);
+  const [selectedPref, setselectedPref] = useState('all');
+  const [selectedGameCenter, setselectedGameCenter] = useState('all');
+  const [businessTimeAvailability, setbusinessTimeAvailability] = useState(false);
+  const [searchKeyword, setsearchKeyword] = useState('');
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -50,15 +53,49 @@ export default (props: P) => {
     }
   };
 
+  const toHalfWidth = (str: string) => {
+    return str
+      .replace(/[\uFF01-\uFF5E]/g, function (ch) {
+        return String.fromCharCode(ch.charCodeAt(0) - 0xfee0);
+      })
+      .replace(/\u3000/g, ' ');
+  };
+
+  const getFilteredStoresList = (gamecenterId: string = 'all') => {
+    return props.storesInfo.filter(storeInfo => {
+      let result = true;
+      if (selectedPref !== 'all') {
+        result &&= storeInfo.adminlv1 === selectedPref;
+      }
+      if (gamecenterId !== 'all') {
+        result &&= storeInfo.type === gamecenterId;
+      }
+      if (businessTimeAvailability) {
+        result &&= storeInfo.business_hours_start <= businessStartTime;
+        if (!(storeInfo.business_hours_start === 0 && storeInfo.business_hours_end === 24)) {
+          result &&= storeInfo.business_hours_end >= businessEndTime;
+        }
+      }
+      result &&=
+        toHalfWidth(storeInfo.name).toLowerCase().includes(toHalfWidth(searchKeyword).toLowerCase()) || toHalfWidth(storeInfo.address).toLowerCase().includes(toHalfWidth(searchKeyword).toLowerCase());
+      return result;
+    });
+  };
+
   return (
     <>
       <div style={{ height: '100%', width: '100%', position: 'relative' }}>
         <div id="search_container">
           <input
+            className="searchInput"
             type="text"
             placeholder="Search & Filter.."
+            value={searchKeyword}
             onClick={() => {
               setfilterOpen(true);
+            }}
+            onChange={e => {
+              setsearchKeyword(e.target.value);
             }}
           />
           {filterOpen ? (
@@ -66,29 +103,35 @@ export default (props: P) => {
               <div className="filter">
                 <div className="filterSection">
                   <p>都道府県</p>
-                  <MultiSelect
-                    className="filterSectionItem"
-                    options={[
-                      { label: 'Grapes 🍇', value: 'grapes' },
-                      { label: 'Mango 🥭', value: 'mango' },
-                      { label: 'Strawberry 🍓', value: 'strawberry', disabled: true },
-                    ]}
-                    value={selected}
-                    onChange={setSelected}
-                    labelledBy="Select"
+                  <JapanPreferenceSelector
+                    defaultValue="all"
+                    onChange={pref => {
+                      setselectedPref(pref);
+                    }}
                   />
                 </div>
                 <div className="filterSection">
                   <p>遊戯中心種類</p>
-                  <select className="filterSectionItem">
-                    <option value="">123</option>
+                  <select
+                    className="filterSectionItem"
+                    onChange={e => {
+                      setselectedGameCenter(e.target.value);
+                    }}
+                  >
+                    <option value={'all'}>{'全部 (' + getFilteredStoresList().length + ')'}</option>
+                    {GAME_CENTER_LIST.map(gameCenter => {
+                      return <option value={gameCenter.id}>{gameCenter.name + ' (' + getFilteredStoresList(gameCenter.id).length + ')'}</option>;
+                    })}
                   </select>
                 </div>
                 <div className="filterSection">
                   <TimePicker
                     onDragEnd={(startTime, endTime) => {
-                      setbusinessStartTime(startTime)
-                      setbusinessEndTime(endTime)
+                      setbusinessStartTime(startTime);
+                      setbusinessEndTime(endTime);
+                    }}
+                    onAvailableStateChange={(availability: boolean) => {
+                      setbusinessTimeAvailability(availability);
                     }}
                   />
                 </div>
@@ -113,18 +156,25 @@ export default (props: P) => {
           <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
           <LeafletLocateControl position="bottomright" />
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {props.storesInfo.map(storeInfo => {
+          {getFilteredStoresList(selectedGameCenter).map(storeInfo => {
             return (
               <Marker position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
                 <Popup>
                   <p id="storepopup_title">{storeInfo.name}</p>
                   <p>{storeInfo.address}</p>
-                  <p>
-                    {storeInfo.business_hours_start.toString().padStart(2, '0')}:{storeInfo.business_minute_start.toString().padStart(2, '0')}~
-                    {storeInfo.business_hours_end.toString().padStart(2, '0')}:{storeInfo.business_minute_end.toString().padStart(2, '0')}
+                  <p className='businessTime'>
+                    {storeInfo.business_hours_start === -1 && storeInfo.business_hours_end === -1 ? (
+                      <p>営業時間未知</p>
+                    ) : (
+                      <p>
+                        営業時間：
+                        {storeInfo.business_hours_start.toString().padStart(2, '0')}:{storeInfo.business_minute_start.toString().padStart(2, '0')}~
+                        {storeInfo.business_hours_end.toString().padStart(2, '0')}:{storeInfo.business_minute_end.toString().padStart(2, '0')}
+                      </p>
+                    )}
                   </p>
                   <a href={storeInfo.mapURL} target="_blank">
-                    <p>在Google Map打开</p>
+                    <p>開於Google Map</p>
                   </a>
                 </Popup>
               </Marker>
