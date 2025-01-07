@@ -7,6 +7,7 @@ export const Main = () => {
   const [currentGame, setcurrentGame] = useState('mamadx');
   const [currentVer, setcurrentVer] = useState('ja');
   const [isMobile, setisMobile] = useState(false);
+  const [isAbout, setisAbout] = useState(false);
 
   // init Menu select status from URL
   const location = useLocation().pathname.split('/');
@@ -32,9 +33,10 @@ export const Main = () => {
       <menu>
         <Link to={'./mamadx/' + currentVer}>
           <button
-            className={currentGame === 'mamadx' ? 'select' : ''}
+            className={currentGame === 'mamadx' && !isAbout ? 'select' : ''}
             onClick={() => {
               setcurrentGame('mamadx');
+              setisAbout(false);
             }}
           >
             mamaDX
@@ -43,9 +45,10 @@ export const Main = () => {
 
         <Link to={'./chuni/' + currentVer}>
           <button
-            className={currentGame === 'chuni' ? 'select' : ''}
+            className={currentGame === 'chuni' && !isAbout ? 'select' : ''}
             onClick={() => {
               setcurrentGame('chuni');
+              setisAbout(false);
             }}
           >
             CHUNI
@@ -53,9 +56,10 @@ export const Main = () => {
         </Link>
         <Link to={'./ongk/'}>
           <button
-            className={currentGame === 'ongk' ? 'select' : ''}
+            className={currentGame === 'ongk' && !isAbout ? 'select' : ''}
             onClick={() => {
               setcurrentGame('ongk');
+              setisAbout(false);
             }}
           >
             ONGK
@@ -70,9 +74,10 @@ export const Main = () => {
       <menu style={{ visibility: currentGame === 'ongk' ? 'hidden' : 'visible' }}>
         <Link to={'./' + currentGame + '/ja'}>
           <button
-            className={currentVer === 'ja' ? 'select' : ''}
+            className={currentVer === 'ja' && !isAbout ? 'select' : ''}
             onClick={() => {
               setcurrentVer('ja');
+              setisAbout(false);
             }}
           >
             日本版
@@ -80,9 +85,10 @@ export const Main = () => {
         </Link>
         <Link to={'./' + currentGame + '/inter'}>
           <button
-            className={currentVer === 'inter' ? 'select' : ''}
+            className={currentVer === 'inter' && !isAbout ? 'select' : ''}
             onClick={() => {
               setcurrentVer('inter');
+              setisAbout(false);
             }}
           >
             国際版
@@ -109,7 +115,16 @@ export const Main = () => {
   const MenuOther = () => {
     return (
       <menu>
-        <button>About</button>
+        <Link to={'./about'}>
+          <button
+            className={isAbout ? 'select' : ''}
+            onClick={() => {
+              setisAbout(true);
+            }}
+          >
+            About
+          </button>
+        </Link>
       </menu>
     );
   };

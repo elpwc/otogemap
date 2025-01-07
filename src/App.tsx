@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import MaimaiDX from './pages/MaimaiDX';
 import ErrorPage from './pages/ErrorPage';
 import 'animate.css';
+import About from './pages/About';
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
             <Route path="inter" element={<ErrorPage />}></Route>
           </Route>
           <Route path="ongk" element={<MaimaiDX />}></Route>
+
+          <Route path="about" element={<About />}></Route>
 
           <Route path="404" element={<ErrorPage />}></Route>
           <Route path="*" element={<ErrorPage />}></Route>
