@@ -15,7 +15,7 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   useEffect(() => {
-    // document.title = '';
+    document.title = 'OtogeMap - mamadx';
   }, []);
 
   return <>
