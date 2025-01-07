@@ -62,6 +62,14 @@ select {
 }
 .arcadeAmount {
 }
+
+.popupContents {
+}
+
+.popupContents p {
+  margin: 0 !important;
+}
+
 .popupItem {
   font-size: 15px;
   font-weight: bold;
@@ -70,7 +78,7 @@ select {
   gap: 10px;
 }
 
-.popupItem p{
+.popupItem p {
   margin: 10px 0 !important;
 }
 
