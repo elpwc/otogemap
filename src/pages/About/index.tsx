@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import salt1000 from '../../resources/icons/salt1000.png';
+import axios from 'axios';
+import appconfig from '../../appconfig';
 
 interface P {}
 
@@ -43,6 +45,9 @@ export default (props: P) => {
           </a>
         </p>
         <p>連絡→elpwc@hotmail.com迄</p>
+        <button onClick={() => {
+          axios.get(appconfig.apiBaseURL + '/storeInfo.php')
+        }}>test</button>
       </div>
     </div>
   );

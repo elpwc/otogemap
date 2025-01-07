@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 src/appconfig.ts
+
+/public/api/private/*
+!/public/api/private/*.example.*
+/public/api/plugin/*
+
+global.ts
