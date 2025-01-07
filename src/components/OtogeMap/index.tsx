@@ -144,8 +144,8 @@ export default (props: P) => {
                 </div>
                 <div>
                   <span style={{ userSelect: 'none' }}>
-                    <input id="timeAvailableCheckbox" type="checkbox" style={{ width: 'auto' }} onChange={e => {}} />
-                    <label htmlFor="timeAvailableCheckbox">表示収蔵店舗（0個）</label>
+                    <input id="showCollectionCheckbox" type="checkbox" style={{ width: 'auto' }} onChange={e => {}} />
+                    <label htmlFor="showCollectionCheckbox">表示収蔵店舗（0個）</label>
                   </span>
                 </div>
                 <button
