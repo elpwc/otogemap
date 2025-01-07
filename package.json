@@ -2,6 +2,7 @@
   "name": "otogemap",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@react-leaflet/core": "^3.0.0",
     "animate.css": "^4.1.1",

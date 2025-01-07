@@ -19,7 +19,7 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   useEffect(() => {
-    document.title = 'OtogeMap - mamadx';
+    document.title = 'OtogeMap - 引誘地図';
   }, []);
 
   const selectData = () => {
