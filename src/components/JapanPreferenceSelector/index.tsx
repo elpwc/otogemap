@@ -4,6 +4,7 @@ import './index.css';
 
 interface P {
   defaultValue: string;
+  value: string;
   onChange: (pref: string) => void;
 }
 
@@ -27,7 +28,9 @@ export default (props: P) => {
 
   const toggleDropdown = () => setisOpen(!isOpen);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setselectedPref(props.value)
+  }, [props.value]);
 
   return (
     <div className="prefSelector">

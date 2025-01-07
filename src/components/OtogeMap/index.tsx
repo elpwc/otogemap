@@ -105,6 +105,7 @@ export default (props: P) => {
                   <p>都道府県</p>
                   <JapanPreferenceSelector
                     defaultValue="all"
+                    value={selectedPref}
                     onChange={pref => {
                       setselectedPref(pref);
                     }}
@@ -114,6 +115,7 @@ export default (props: P) => {
                   <p>遊戯中心種類</p>
                   <select
                     className="filterSectionItem"
+                    value={selectedGameCenter}
                     onChange={e => {
                       setselectedGameCenter(e.target.value);
                     }}
@@ -133,6 +135,9 @@ export default (props: P) => {
                     onAvailableStateChange={(availability: boolean) => {
                       setbusinessTimeAvailability(availability);
                     }}
+                    startTimeValue={businessStartTime}
+                    endTimeValue={businessEndTime}
+                    availableValue={businessTimeAvailability}
                   />
                 </div>
                 <button
@@ -162,7 +167,7 @@ export default (props: P) => {
                 <Popup>
                   <p id="storepopup_title">{storeInfo.name}</p>
                   <p>{storeInfo.address}</p>
-                  <p className='businessTime'>
+                  <p className="businessTime">
                     {storeInfo.business_hours_start === -1 && storeInfo.business_hours_end === -1 ? (
                       <p>営業時間未知</p>
                     ) : (

@@ -7,12 +7,15 @@ interface P {
   onAvailableStateChange: (availability: boolean) => void;
   defaultStartTime?: number;
   defaultEndTime?: number;
+  startTimeValue: number;
+  endTimeValue: number;
+  availableValue: boolean;
 }
 
 export default (props: P) => {
-  const [businessStartTime, setbusinessStartTime] = useState(0);
-  const [businessEndTime, setbusinessEndTime] = useState(27);
-  const [available, setavailable] = useState(false);
+  const [businessStartTime, setbusinessStartTime] = useState(props.startTimeValue ?? 0);
+  const [businessEndTime, setbusinessEndTime] = useState(props.endTimeValue ?? 27);
+  const [available, setavailable] = useState(props.availableValue ?? false);
 
   useEffect(() => {}, []);
 
@@ -32,13 +35,14 @@ export default (props: P) => {
           <label htmlFor="timeAvailableCheckbox">営業時間選択</label>
         </span>
       </p>
-      <p style={{ fontSize: '15px', color: '#cd4246' }}>＊唯営業時間既知ノ点表示</p>
+      <p style={{ fontSize: '15px', color: '#cd4246' }}>＊唯営業時間既知ノ店舗表示</p>
       <div>
         <input
           disabled={!available}
           type="range"
           min="0"
           max="24"
+          value={businessStartTime}
           defaultValue={props.defaultStartTime ?? 0}
           onChange={e => {
             setbusinessStartTime(e.target.valueAsNumber);
@@ -59,6 +63,7 @@ export default (props: P) => {
           type="range"
           min="0"
           max="27"
+          value={businessEndTime}
           defaultValue={props.defaultEndTime ?? 27}
           onChange={e => {
             setbusinessEndTime(e.target.valueAsNumber);
