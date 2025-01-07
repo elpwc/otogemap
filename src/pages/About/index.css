@@ -25,3 +25,8 @@
   align-items: center;
   gap: 10px;
 }
+
+.updateMsg{
+  font-size: 15px;
+  color: gray;
+}
