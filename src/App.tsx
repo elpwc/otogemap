@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Main } from './main';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import MapPage from './pages/MapPage';
 import ErrorPage from './pages/ErrorPage';
 import 'animate.css';
@@ -13,12 +13,12 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="" element={<Main />}>
-          <Route index element={<MapPage game={Game.maimaidx} version={GameVersion.ja} />}></Route>
-          <Route path="mamadx"></Route>
+          <Route index element={<Navigate to="mamadx/ja" replace />} />
+          <Route path="mamadx" element={<Navigate to="mamadx/ja" replace />}></Route>
           <Route path="mamadx/ja" element={<MapPage game={Game.maimaidx} version={GameVersion.ja} />}></Route>
           <Route path="mamadx/inter" element={<MapPage game={Game.maimaidx} version={GameVersion.inter} />}></Route>
 
-          <Route path="chuni"></Route>
+          <Route path="chuni" element={<Navigate to="chuni/ja" replace />}></Route>
           <Route path="chuni/ja" element={<MapPage game={Game.chuni} version={GameVersion.ja} />}></Route>
           <Route path="chuni/inter" element={<MapPage game={Game.chuni} version={GameVersion.ja} />}></Route>
 
