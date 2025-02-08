@@ -7,7 +7,7 @@ export const Main = () => {
   const [currentGame, setcurrentGame] = useState('mamadx');
   const [currentVer, setcurrentVer] = useState('ja');
   const [isMobile, setisMobile] = useState(false);
-  const [isAbout, setisAbout] = useState(false);
+  const [isAboutOrLogin, setisAboutOrLogin] = useState('');
 
   // init Menu select status from URL
   const location = useLocation().pathname.split('/');
@@ -33,10 +33,10 @@ export const Main = () => {
       <menu>
         <Link to={'./mamadx/' + currentVer}>
           <button
-            className={currentGame === 'mamadx' && !isAbout ? 'select' : ''}
+            className={currentGame === 'mamadx' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
               setcurrentGame('mamadx');
-              setisAbout(false);
+              setisAboutOrLogin('');
             }}
           >
             mamaDX
@@ -45,10 +45,10 @@ export const Main = () => {
 
         <Link to={'./chuni/' + currentVer}>
           <button
-            className={currentGame === 'chuni' && !isAbout ? 'select' : ''}
+            className={currentGame === 'chuni' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
               setcurrentGame('chuni');
-              setisAbout(false);
+              setisAboutOrLogin('');
             }}
           >
             CHUNI
@@ -56,10 +56,10 @@ export const Main = () => {
         </Link>
         <Link to={'./ongk/'}>
           <button
-            className={currentGame === 'ongk' && !isAbout ? 'select' : ''}
+            className={currentGame === 'ongk' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
               setcurrentGame('ongk');
-              setisAbout(false);
+              setisAboutOrLogin('');
             }}
           >
             ONGK
@@ -74,10 +74,10 @@ export const Main = () => {
       <menu style={{ visibility: currentGame === 'ongk' ? 'hidden' : 'visible' }}>
         <Link to={'./' + currentGame + '/ja'}>
           <button
-            className={currentVer === 'ja' && !isAbout ? 'select' : ''}
+            className={currentVer === 'ja' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
               setcurrentVer('ja');
-              setisAbout(false);
+              setisAboutOrLogin('');
             }}
           >
             日本版
@@ -85,10 +85,10 @@ export const Main = () => {
         </Link>
         <Link to={'./' + currentGame + '/inter'}>
           <button
-            className={currentVer === 'inter' && !isAbout ? 'select' : ''}
+            className={currentVer === 'inter' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
               setcurrentVer('inter');
-              setisAbout(false);
+              setisAboutOrLogin('');
             }}
           >
             国際版
@@ -115,11 +115,21 @@ export const Main = () => {
   const MenuOther = () => {
     return (
       <menu>
+        <Link to={'./login'}>
+          <button
+            className={isAboutOrLogin === 'login' ? 'select' : ''}
+            onClick={() => {
+              setisAboutOrLogin('login');
+            }}
+          >
+            Login
+          </button>
+        </Link>
         <Link to={'./about'}>
           <button
-            className={isAbout ? 'select' : ''}
+            className={isAboutOrLogin === 'about' ? 'select' : ''}
             onClick={() => {
-              setisAbout(true);
+              setisAboutOrLogin('about');
             }}
           >
             About

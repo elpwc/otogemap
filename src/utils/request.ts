@@ -8,7 +8,7 @@ import { userInfoStorage } from '../globalStorages';
 axios.defaults.withCredentials = false;
 
 const service = axios.create({
-  baseURL: appconfig.apiBaseURL + '/api/v1',
+  baseURL: appconfig.apiBaseURL + '',
   timeout: 5000,
   responseType: 'json',
   //withCredentials: true,
@@ -22,7 +22,7 @@ service.interceptors.request.use(
   config => {
     //token
     if (config && config.headers) {
-      config.headers.authorization = 'bearer ' + userInfoStorage.value.token || '';
+      config.headers.authorization = 'bearer ' + (userInfoStorage.value.token || '');
     }
     return config;
   },

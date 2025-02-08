@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "/otogemap",
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@react-leaflet/core": "^3.0.0",
     "animate.css": "^4.1.1",

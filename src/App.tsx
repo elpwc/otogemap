@@ -7,6 +7,8 @@ import ErrorPage from './pages/ErrorPage';
 import 'animate.css';
 import About from './pages/About';
 import { Game, GameVersion } from './utils/enums';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
 
           <Route path="ongk" element={<MapPage game={Game.ongeki} />}></Route>
 
+          <Route path="login" element={<LoginPage />}></Route>
+          <Route path="register" element={<RegisterPage />}></Route>
           <Route path="about" element={<About />}></Route>
 
           <Route path="404" element={<ErrorPage />}></Route>

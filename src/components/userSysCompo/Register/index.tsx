@@ -5,6 +5,8 @@ import ReCaptchaV2 from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '../../../global';
 import { Field, Form, Formik } from 'formik';
 import request from '../../../utils/request';
+import salt1000 from '../../../resources/icons/salt1000.png';
+
 interface P {}
 
 export default (props: P) => {
@@ -26,7 +28,7 @@ export default (props: P) => {
   const [tip, settip]: [string, any] = useState('');
 
   const createUser = async ({ name, password, token }: { name: string; password: string; token: string }) => {
-    return request<any>('/user', {
+    return request<any>('/user/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,11 +38,11 @@ export default (props: P) => {
   };
 
   useEffect(() => {
-    document.title = 'Kikaku - 注册';
+    document.title = 'Otogemap - Register';
   }, []);
 
   return (
-    <div className="w-full h-full flex justify-center">
+    <div className="register-container">
       <Formik
         enableReinitialize
         initialValues={initialValues}
@@ -51,50 +53,38 @@ export default (props: P) => {
                 createUser({ name: values.name, password: values.password, token: recaptchaToken })
                   .then(e => {
                     resetForm();
-                    settip('注册成功喵, 马上跳转');
+                    settip('成功');
                     navigate('/login');
                   })
                   .catch(e => {
                     if (e.status === 400) {
-                      settip('用户名已经有人用过了喵');
+                      settip('Username既存在');
                     } else if (e.status === 403) {
-                      settip('验证码验证失败了喵');
+                      settip('reCAPTCHA認証失敗');
                     }
                   });
               } else {
-                settip('请通过验证码喵');
+                settip('reCAPTCHA認証未完成');
               }
             } else {
-              settip('请通过输入用户名喵');
+              settip('Username入力！');
             }
           } else {
-            settip('密码不一致喵');
+            settip('Password不一致');
           }
         }}
       >
         {({ values }) => (
-          <Form className="metro-900 shadow-lg rounded-lg px-10 py-10 mt-32 h-fit w-300 space-y-5">
-            <label className="block text-sm font-medium text-gray-700">
-              用户名
-              <Field id="name" name="name" className="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+          <Form className="register-form">
+            <img src={salt1000} height={'100px'} width={'100px'} />
+            <label className="register-form-item-container">
+              <Field id="name" name="name" className="register-input" placeholder="Username" />
             </label>
-            <label className="block text-sm font-medium text-gray-700">
-              密码
-              <Field
-                type="password"
-                id="password"
-                name="password"
-                className="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
+            <label className="register-form-item-container">
+              <Field type="password" id="password" name="password" className="register-input" placeholder="Password" />
             </label>
-            <label className="block text-sm font-medium text-gray-700">
-              重复输入密码
-              <Field
-                type="password"
-                id="password2"
-                name="password2"
-                className="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
+            <label className="register-form-item-container">
+              <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回" />
             </label>
             <div>
               <ReCaptchaV2
@@ -108,11 +98,11 @@ export default (props: P) => {
                 }}
               />
             </div>
-            <div className="flex flex-col items-center">
-              <button type="submit" className="btn-blue btn-blue-ring">
-                注册
+            <div className="register-form-item-container">
+              <button type="submit" className="shahow-button register-button">
+                ACCOUNT作成
               </button>
-              <div>{tip}</div>
+              <div className="register-tip">{tip}</div>
             </div>
           </Form>
         )}

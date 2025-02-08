@@ -1,0 +1,47 @@
+.shahow-button {
+  background-color: white;
+  border-left-color: rgb(173, 173, 173);
+  border-top-color: rgb(173, 173, 173);
+  border-right-color: black;
+  border-bottom-color: black;
+  border-width: 3px;
+  border-style: solid;
+  font-size: large;
+
+  cursor: pointer;
+  user-select: none;
+  height: 100%;
+  margin: 0 0px 0 0px;
+  padding: 0 5px 0 5px;
+}
+@media (any-hover: hover) {
+  .shahow-button:hover {
+    border-left-width: 2px;
+    border-top-width: 2px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+  }
+}
+.shahow-button:active {
+  border-left-width: 4px;
+  border-top-width: 4px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  background-color: rgb(241, 241, 241);
+}
+
+.shahow-button.select {
+  border-left-width: 4px;
+  border-top-width: 4px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-color: black;
+  border-top-color: black;
+  border-right-color: rgb(117, 117, 117);
+  border-bottom-color: rgb(117, 117, 117);
+  background-color: rgb(201, 201, 201);
+}
+
+*{
+  /*font-family: serif;*/
+}

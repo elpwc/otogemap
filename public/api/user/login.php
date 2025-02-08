@@ -8,6 +8,7 @@ require '../private/dbcfg.php';
 require '../private/admin.php';
 require '../utils/utils.php';
 require '../utils/sqlgenerator.php';
+require '../utils/cors.php';
 
 session_start();
 
@@ -55,7 +56,9 @@ switch ($request_type) {
     // 退出登录
     unset($_SESSION['token']);
     session_destroy();
+    echo json_encode(["res" => "ok"]);
     break;
   default:
+    echo json_encode(["res" => "unknown"]);
     break;
 }
