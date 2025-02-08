@@ -82,7 +82,7 @@ export const Main = () => {
   const MenuVer = () => {
     return (
       <menu style={{ visibility: currentGame === 'ongk' ? 'hidden' : 'visible' }}>
-        <Link to={'./' + currentGame + '/ja'}>
+        <Link to={'./' + (currentGame === '' ? 'mamadx' : currentGame) + '/ja'}>
           <button
             className={currentVer === 'ja' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
@@ -93,7 +93,7 @@ export const Main = () => {
             日本版
           </button>
         </Link>
-        <Link to={'./' + currentGame + '/inter'}>
+        <Link to={'./' + (currentGame === '' ? 'mamadx' : currentGame) + '/inter'}>
           <button
             className={currentVer === 'inter' && !isAboutOrLogin ? 'select' : ''}
             onClick={() => {
