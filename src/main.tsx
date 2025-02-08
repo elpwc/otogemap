@@ -4,18 +4,26 @@ import './main.css';
 import salt from './resources/icons/salt.png';
 
 export const Main = () => {
-  const [currentGame, setcurrentGame] = useState('mamadx');
-  const [currentVer, setcurrentVer] = useState('ja');
+  const [currentGame, setcurrentGame] = useState('');
+  const [currentVer, setcurrentVer] = useState('');
   const [isMobile, setisMobile] = useState(false);
   const [isAboutOrLogin, setisAboutOrLogin] = useState('');
 
   // init Menu select status from URL
   const location = useLocation().pathname.split('/');
-
+  console.log(location);
   useEffect(() => {
     if (location.length === 2) {
-      setcurrentGame(location[1]);
-      setcurrentVer('ja');
+      if (location[1] === 'login') {
+        setcurrentGame('');
+        setisAboutOrLogin('login');
+      } else if (location[1] === 'about') {
+        setcurrentGame('');
+        setisAboutOrLogin('about');
+      } else {
+        setcurrentGame(location[1]);
+        setcurrentVer('ja');
+      }
     } else if (location.length === 3) {
       setcurrentGame(location[1]);
       if (['ja', 'inter'].includes(location[2])) {
@@ -24,7 +32,9 @@ export const Main = () => {
         setcurrentVer('ja');
       }
     }
+  }, [useLocation().pathname]);
 
+  useEffect(() => {
     setisMobile(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent));
   }, []);
 
