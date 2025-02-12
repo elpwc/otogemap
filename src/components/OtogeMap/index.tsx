@@ -216,6 +216,20 @@ export default (props: P) => {
                     <label htmlFor="showCollectionCheckbox">表示収蔵店舗（0個）</label>
                   </span>
                 </div>
+                <Divider />
+                <div>
+                  <p>🐻開発中Project宣伝</p>
+                  <p>
+                    <a href="" target="_black">
+                      maiweb - Online版maimai
+                    </a>
+                  </p>
+                  <p>
+                    <a href="" target="_black">
+                      烏蒙査分器 - maimai日本版電卓
+                    </a>
+                  </p>
+                </div>
                 <button
                   className="filterCloseButton"
                   onClick={() => {
