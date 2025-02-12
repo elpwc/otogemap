@@ -26,9 +26,10 @@ export default (props: P) => {
   const [initialValues, setinitialValues]: [any, any] = useState(defaultValues);
   const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(false);
   const [tip, settip]: [string, any] = useState('');
+  const [recaptchaLoading, setrecaptchaLoading]: [boolean, any] = useState(true);
 
   const createUser = async ({ name, password, token }: { name: string; password: string; token: string }) => {
-    return request<any>('/user/user', {
+    return request<any>('/user/user.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ export default (props: P) => {
                   .then(e => {
                     resetForm();
                     settip('成功');
-                    navigate('/login');
+                    //navigate('/login');
                   })
                   .catch(e => {
                     if (e.status === 400) {
@@ -78,15 +79,19 @@ export default (props: P) => {
           <Form className="register-form">
             <img src={salt1000} height={'100px'} width={'100px'} />
             <label className="register-form-item-container">
-              <Field id="name" name="name" className="register-input" placeholder="Username" />
+              <Field type="email" id="email" name="email" className="register-input" placeholder="Email" />
             </label>
             <label className="register-form-item-container">
               <Field type="password" id="password" name="password" className="register-input" placeholder="Password" />
             </label>
             <label className="register-form-item-container">
-              <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回" />
+              <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回目" />
+            </label>
+            <label className="register-form-item-container">
+              <Field id="name" name="name" className="register-input" placeholder="Nickname" />
             </label>
             <div>
+              {recaptchaLoading && <div className="register-tip">reCAPTCHA Loading...</div>}
               <ReCaptchaV2
                 sitekey={RECAPTCHA_SITE_KEY}
                 onChange={e => {
@@ -95,6 +100,9 @@ export default (props: P) => {
                 }}
                 onExpired={() => {
                   setrecaptchaToken(null);
+                }}
+                asyncScriptOnLoad={() => {
+                  setrecaptchaLoading(false);
                 }}
               />
             </div>

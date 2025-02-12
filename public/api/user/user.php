@@ -8,6 +8,8 @@ require '../private/dbcfg.php';
 require '../private/admin.php';
 require '../utils/utils.php';
 require '../utils/sqlgenerator.php';
+require '../utils/cors.php';
+require '../private/verifygen.php';
 
 session_start();
 
@@ -26,34 +28,37 @@ switch ($request_type) {
 
     @$name = trim((string)($data->name));
     @$email = trim((string)($data->email));
-    @$verify_code = trim((string)($data->verify_code));
+    //@$verify_code = trim((string)($data->verify_code));
     @$pw = trim((string)($data->pw));
 
-    if ($_SESSION["verify_code"] != '' && $verify_code == $_SESSION["verify_code"]) {
+    //if ($_SESSION["verify_code"] != '' && $verify_code == $_SESSION["verify_code"]) {
 
-      unset($_SESSION['verify_code']);
+    //unset($_SESSION['verify_code']);
 
-      // user exist
-      $usersql = 'SELECT `name` FROM `user`
-    WHERE `name`="' . $name . '" AND `is_deleted`=0
-    ;';
-      // email exist
-      $emailsql = 'SELECT `email` FROM `user`
+    // user exist
+    //   $usersql = 'SELECT `name` FROM `user`
+    // WHERE `name`="' . $name . '" AND `is_deleted`=0
+    // ;';
+    // email exist
+    $emailsql = 'SELECT `email` FROM `user`
     WHERE `email`="' . $email . '" AND `is_deleted`=0
     ;';
 
-      $user_result = mysqli_query($sqllink, $usersql);
+    //$user_result = mysqli_query($sqllink, $usersql);
 
-      $email_result = mysqli_query($sqllink, $emailsql);
+    $email_result = mysqli_query($sqllink, $emailsql);
 
-      if (($user_result->num_rows > 0) || ($email_result->num_rows > 0)) {
-        // exist
-        echo json_encode(["res" => "exist"]);
-      } else {
+    if (/*($user_result->num_rows > 0) ||*/($email_result->num_rows > 0)) {
+      // exist
+      echo json_encode(["res" => "exist"]);
+    } else {
+      $email_result = send_register_verification_mail($email, generate_verification_code($email));
+
+      if ($email_result) {
         // not exist
         $sql = 'INSERT 
       INTO `user` (`name`, `pw`, `email`)
-      VALUES ("' . $name . '","' . $pw . '","' . $email . '");
+      VALUES ("' . $name . '","' . md5($pw) . '","' . $email . '");
       ';
 
         $result = mysqli_query($sqllink, $sql);
@@ -62,14 +67,47 @@ switch ($request_type) {
         } else {
           echo json_encode(["res" => "unknown_error"]);
         }
+      } else {
+
+        echo json_encode(["res" => "email_failed"]);
       }
-    } else {
-      echo json_encode(["res" => "verification_error"]);
     }
+    // } else {
+    //   echo json_encode(["res" => "verification_error"]);
+    // }
 
     break;
   case 'PATCH':
+    @$id = trim((string)($data->id));
+    @$name = trim((string)($data->name));
+    @$pw = trim((string)($data->pw));
+    @$is_deleted = isset($data->is_deleted) ? (int)$data->is_deleted : null;
+    @$is_banned = isset($data->is_banned) ? (int)$data->is_banned : null;
+    @$auth = isset($data->auth) ? (int)$data->auth : null;
+    @$email = trim((string)($data->email));
+    @$verified = isset($data->verified) ? (int)$data->verified : null;
 
+    $update_fields = [];
+    if ($name !== '') $update_fields[] = "`name`='$name'";
+    if ($pw !== '') $update_fields[] = "`pw`='$pw'";
+    if ($is_deleted !== null) $update_fields[] = "`is_deleted`=$is_deleted";
+    if ($is_banned !== null) $update_fields[] = "`is_banned`=$is_banned";
+    if ($auth !== null) $update_fields[] = "`auth`=$auth";
+    if ($email !== '') $update_fields[] = "`email`='$email'";
+    if ($verified !== null) $update_fields[] = "`verified`=$verified";
+
+    if (!empty($update_fields)) {
+      $sql = "UPDATE `user` SET " . implode(', ', $update_fields) . " WHERE `id`=$id;";
+      $result = mysqli_query($sqllink, $sql);
+
+      if ($result == true) {
+        echo json_encode(["res" => "ok"]);
+      } else {
+        echo json_encode(["res" => "unknown_error"]);
+      }
+    } else {
+      echo json_encode(["res" => "no_fields_to_update"]);
+    }
     break;
   case 'DELETE':
     @$id = trim((string)($data->id));

@@ -9,6 +9,7 @@ import About from './pages/About';
 import { Game, GameVersion } from './utils/enums';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import RegisterCompletePage from './pages/RegisterCompletePage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
 
           <Route path="login" element={<LoginPage />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>
+          <Route path="registerComp" element={<RegisterCompletePage />}></Route>
           <Route path="about" element={<About />}></Route>
 
           <Route path="404" element={<ErrorPage />}></Route>

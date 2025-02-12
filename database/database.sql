@@ -34,7 +34,8 @@ create table IF NOT EXISTS `user`(
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `update_date` DATETIME ON UPDATE CURRENT_TIMESTAMP,
     `last_login` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `email` VARCHAR(100) NOT NULL
+    `email` VARCHAR(100) NOT NULL,
+    `verified` BOOLEAN DEFAULT FALSE
 )ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
 
 create table IF NOT EXISTS `collection`(

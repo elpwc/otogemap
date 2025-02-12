@@ -29,3 +29,6 @@ src/appconfig.ts
 /public/api/plugin/*
 
 global.ts
+
+/vendor/
+/public/vendor/

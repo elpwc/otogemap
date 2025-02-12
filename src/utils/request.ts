@@ -49,22 +49,24 @@ service.interceptors.response.use(
     const errResponse = err.response;
     console.log('Oops! ', errResponse);
 
-    switch (errResponse.status) {
-      case 400:
-        break;
-      case 401:
-        break;
-      case 403:
-        break;
-      case 404:
-        //message.error('请求的页面不存在喵');
-        break;
-      case 422:
-        break;
-      case 500:
-        break;
-      default:
-        break;
+    if (errResponse?.status) {
+      switch (errResponse.status) {
+        case 400:
+          break;
+        case 401:
+          break;
+        case 403:
+          break;
+        case 404:
+          //message.error('请求的页面不存在喵');
+          break;
+        case 422:
+          break;
+        case 500:
+          break;
+        default:
+          break;
+      }
     }
 
     throw errResponse;

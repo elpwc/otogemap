@@ -51,31 +51,41 @@ export default (props: P) => {
               loginUser({ name: values.name, password: values.password })
                 .then(e => {
                   console.log(e);
-                  const token = e.data.user.token;
-                  const name = e.data.user.name;
-                  userInfoStorage.set({ name, token });
+                  const res = e.res;
+                  switch (res) {
+                    case 'ok':
+                      const token = e.data.user.token;
+                      const name = e.data.user.name;
+                      userInfoStorage.set({ name, token });
 
-                  if (values.autoLogin) {
-                    c_token(token);
-                    c_userName(name);
-                    c_autoLogin(true);
-                  } else {
-                    c_token('');
-                    c_userName('');
-                    c_autoLogin(false);
+                      if (values.autoLogin) {
+                        c_token(token);
+                        c_userName(name);
+                        c_autoLogin(true);
+                      } else {
+                        c_token('');
+                        c_userName('');
+                        c_autoLogin(false);
+                      }
+
+                      resetForm();
+                      settip('成功');
+                      navigate('/');
+
+                      break;
+                    case 'fail':
+                      settip('EMAIL不存在 or PASSWORD不正、失敗');
+                      break;
+                    default:
+                      settip('成功');
+                      break;
                   }
-
-                  resetForm();
-                  settip('成功');
-                  navigate('/');
                 })
                 .catch(e => {
-                  if (e.status === 401) {
-                    settip('Username / Password Error');
-                  }
+                  console.log(e);
                 });
             } else {
-              settip('Username入力!');
+              settip('Email入力!');
             }
           } else {
             settip('Password入力!');
@@ -86,7 +96,7 @@ export default (props: P) => {
           <Form className="login-form">
             <img src={salt1000} height={'100px'} width={'100px'} />
             <label className="">
-              <Field id="name" name="name" className="login-input" placeholder="Username" />
+              <Field id="name" name="name" className="login-input" placeholder="Email" />
             </label>
 
             <label className="">
