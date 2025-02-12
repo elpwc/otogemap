@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import { AttributionControl, MapContainer, Marker, Popup, ScaleControl, TileLayer } from 'react-leaflet';
+import { AttributionControl, MapContainer, Marker, Popup, ScaleControl, TileLayer, useMapEvents } from 'react-leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import '../../../node_modules/leaflet/dist/images/marker-icon.png';
 import { StoreInfo } from '../../utils/store';
@@ -24,6 +24,7 @@ import { GAME_CENTER_LIST } from '../../data/game_center_list';
 import { Divider } from '../Divider';
 import { AREA_LIST } from '../../data/area_list';
 import { Game, GameVersion } from '../../utils/enums';
+import { c_lat, c_lng, c_showfilter, c_zoom } from '../../utils/cookies';
 
 interface P {
   storesInfo: StoreInfo[];
@@ -31,9 +32,29 @@ interface P {
   currentArea: GameVersion;
 }
 
+const MapEventHandler = () => {
+  const map = useMapEvents({
+    moveend: () => {
+      const center = map.getCenter();
+      const zoom = map.getZoom();
+      c_lat(center.lat.toString());
+      c_lng(center.lng.toString());
+      c_zoom(zoom.toString());
+    },
+    zoomend: () => {
+      const center = map.getCenter();
+      const zoom = map.getZoom();
+      c_lat(center.lat.toString());
+      c_lng(center.lng.toString());
+      c_zoom(zoom.toString());
+    },
+  });
+  return null;
+};
+
 export default (props: P) => {
   useEffect(() => {}, []);
-  const [filterOpen, setfilterOpen] = useState(true);
+  const [filterOpen, setfilterOpen] = useState(c_showfilter() === '' ? true : c_showfilter() === 'true');
   const [businessStartTime, setbusinessStartTime] = useState(0);
   const [businessEndTime, setbusinessEndTime] = useState(24);
   const [selectedPref, setselectedPref] = useState('all');
@@ -109,6 +130,7 @@ export default (props: P) => {
             placeholder="Search & Filter.."
             value={searchKeyword}
             onClick={() => {
+              c_showfilter('true');
               setfilterOpen(true);
             }}
             onChange={e => {
@@ -197,6 +219,7 @@ export default (props: P) => {
                 <button
                   className="filterCloseButton"
                   onClick={() => {
+                    c_showfilter('false');
                     setfilterOpen(false);
                   }}
                 >
@@ -210,7 +233,14 @@ export default (props: P) => {
             <></>
           )}
         </div>
-        <MapContainer center={[36.016142, 137.990904]} zoom={5} scrollWheelZoom={true} attributionControl={false} style={{ height: '100%', width: '100%' }}>
+        <MapContainer
+          center={[c_lat() === '' ? 36.016142 : Number(c_lat()), c_lng() === '' ? 137.990904 : Number(c_lng())]}
+          zoom={c_zoom() === '' ? 5 : Number(c_zoom())}
+          scrollWheelZoom={true}
+          attributionControl={false}
+          style={{ height: '100%', width: '100%' }}
+        >
+          <MapEventHandler />
           <ScaleControl position="bottomleft" />
           <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
           <LeafletLocateControl position="bottomright" />

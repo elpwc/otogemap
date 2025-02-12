@@ -3,12 +3,12 @@ import { Link, Outlet, useLocation } from 'react-router';
 import './main.css';
 import salt from './resources/icons/salt.png';
 import { isLogin, loginUser, logout, valiLogin } from './utils/userUtils';
-import { c_autoLogin, c_pw, c_token, c_userName } from './utils/cookies';
+import { c_autoLogin, c_game, c_gamever, c_pw, c_token, c_userName } from './utils/cookies';
 import { userInfoStorage } from './globalStorages';
 
 export const Main = () => {
-  const [currentGame, setcurrentGame] = useState('');
-  const [currentVer, setcurrentVer] = useState('');
+  const [currentGame, setcurrentGame] = useState(c_game());
+  const [currentVer, setcurrentVer] = useState(c_gamever());
   const [isMobile, setisMobile] = useState(false);
   const [isAboutOrLogin, setisAboutOrLogin] = useState('');
 
@@ -63,6 +63,11 @@ export const Main = () => {
       }
     }
   }, [useLocation().pathname]);
+
+  useEffect(() => {
+    c_game(currentGame);
+    c_gamever(currentVer);
+  }, [currentVer, currentGame]);
 
   useEffect(() => {
     setisMobile(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent));
