@@ -7,7 +7,7 @@
 
 require('../private/illegal_words_list.php');
 require '../plugin/Lib_Smtp.php';
-require '../plugin/mailSender.php';
+require '../utils/mailSender.php';
 
 /**
  * 防注入

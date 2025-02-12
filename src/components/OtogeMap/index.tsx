@@ -7,6 +7,8 @@ import '../../../node_modules/leaflet/dist/images/marker-icon.png';
 import { StoreInfo } from '../../utils/store';
 import { icon, point } from 'leaflet';
 import maimarker from '../../resources/markers/mai.png';
+import chunimarker from '../../resources/markers/chuni.png';
+import ogkmarker from '../../resources/markers/ogk.png';
 import gigomarker from '../../resources/markers/gigo.png';
 import namcomarker from '../../resources/markers/namco.png';
 import palomarker from '../../resources/markers/palo.png';
@@ -20,9 +22,13 @@ import { motion } from 'framer-motion';
 import TimePicker from '../TimePicker';
 import { GAME_CENTER_LIST } from '../../data/game_center_list';
 import { Divider } from '../Divider';
+import { AREA_LIST } from '../../data/area_list';
+import { Game, GameVersion } from '../../utils/enums';
 
 interface P {
   storesInfo: StoreInfo[];
+  currentGame: Game;
+  currentArea: GameVersion;
 }
 
 export default (props: P) => {
@@ -51,7 +57,16 @@ export default (props: P) => {
         return taitomarker;
 
       default:
-        return maimarker;
+        switch (props.currentGame) {
+          case Game.maimaidx:
+            return maimarker;
+          case Game.chuni:
+            return chunimarker;
+          case Game.ongeki:
+            return ogkmarker;
+          default:
+            return maimarker;
+        }
     }
   };
 
@@ -63,11 +78,11 @@ export default (props: P) => {
       .replace(/\u3000/g, ' ');
   };
 
-  const getFilteredStoresList = (gamecenterId: string = 'all') => {
+  const getFilteredStoresList = (pref_name: string = 'all', gamecenterId: string = 'all') => {
     return props.storesInfo.filter(storeInfo => {
       let result = true;
-      if (selectedPref !== 'all') {
-        result &&= storeInfo.adminlv1 === selectedPref;
+      if (pref_name !== 'all') {
+        result &&= storeInfo.adminlv1 === pref_name;
       }
       if (gamecenterId !== 'all') {
         result &&= storeInfo.type === gamecenterId;
@@ -104,30 +119,61 @@ export default (props: P) => {
             <motion.div key={'filter'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} style={{ width: '-webkit-fill-available' }}>
               <div className="filter">
                 <div className="filterSection">
-                  <p>都道府県</p>
-                  <JapanPreferenceSelector
-                    defaultValue="all"
-                    value={selectedPref}
-                    onChange={pref => {
-                      setselectedPref(pref);
-                    }}
-                  />
+                  {props.currentArea === GameVersion.ja ? (
+                    <>
+                      <p>都道府県</p>
+                      <JapanPreferenceSelector
+                        defaultValue="all"
+                        value={selectedPref}
+                        onChange={pref => {
+                          setselectedPref(pref);
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <p>国家地区</p>
+                      <select
+                        className="filterSectionItem"
+                        value={selectedPref}
+                        onChange={e => {
+                          setselectedPref(e.target.value);
+                        }}
+                      >
+                        <option value={'all'}>{'全部 (' + getFilteredStoresList().length + ')'}</option>
+                        {AREA_LIST.map(area => {
+                          return (
+                            <option key={area} value={area}>
+                              {area + ' (' + getFilteredStoresList(area).length + ')'}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </>
+                  )}
                 </div>
-                <div className="filterSection">
-                  <p>遊戯中心種類</p>
-                  <select
-                    className="filterSectionItem"
-                    value={selectedGameCenter}
-                    onChange={e => {
-                      setselectedGameCenter(e.target.value);
-                    }}
-                  >
-                    <option value={'all'}>{'全部 (' + getFilteredStoresList().length + ')'}</option>
-                    {GAME_CENTER_LIST.map(gameCenter => {
-                      return <option value={gameCenter.id}>{gameCenter.name + ' (' + getFilteredStoresList(gameCenter.id).length + ')'}</option>;
-                    })}
-                  </select>
-                </div>
+                {props.currentArea === GameVersion.ja && (
+                  <div className="filterSection">
+                    <p>遊戯中心種類</p>
+                    <select
+                      className="filterSectionItem"
+                      value={selectedGameCenter}
+                      onChange={e => {
+                        setselectedGameCenter(e.target.value);
+                      }}
+                    >
+                      <option value={'all'}>{'全部 (' + getFilteredStoresList().length + ')'}</option>
+                      {GAME_CENTER_LIST.map(gameCenter => {
+                        return (
+                          <option key={gameCenter.id} value={gameCenter.id}>
+                            {gameCenter.name + ' (' + getFilteredStoresList(selectedPref, gameCenter.id).length + ')'}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )}
+
                 <div className="filterSection">
                   <TimePicker
                     onDragEnd={(startTime, endTime) => {
@@ -169,9 +215,9 @@ export default (props: P) => {
           <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
           <LeafletLocateControl position="bottomright" />
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {getFilteredStoresList(selectedGameCenter).map(storeInfo => {
+          {getFilteredStoresList(selectedPref, selectedGameCenter).map(storeInfo => {
             return (
-              <Marker position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
+              <Marker key={storeInfo.mapURL} position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
                 <Popup>
                   <div className="popupContents">
                     <p id="storepopup_title">{storeInfo.name}</p>

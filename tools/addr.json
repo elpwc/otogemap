@@ -1,0 +1,24 @@
+{
+  "taiwan": [
+    {
+      "name": "臺北市",
+      "name_en": "Taipei City"
+    },
+    {
+      "name": "新北市",
+      "name_en": "New Taipei City"
+    },
+    {
+      "name": "基隆市",
+      "name_en": "Keelung City"
+    },
+    {
+      "name": "桃園市",
+      "name_en": "Taoyuan City"
+    },
+    {
+      "name": "苗栗縣",
+      "name_en": "Miaoli County"
+    },
+  ],
+}

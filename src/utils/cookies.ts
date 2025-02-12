@@ -31,3 +31,12 @@ export const c_userName = (userName?: string): string => {
     return cookie.load('userName') ?? '';
   }
 };
+
+export const c_pw = (pw?: string): string => {
+  if (pw !== null && pw !== undefined) {
+    cookie.save('p', pw ?? '', { path: '/' });
+    return pw ?? '';
+  } else {
+    return cookie.load('p') ?? '';
+  }
+};

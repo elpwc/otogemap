@@ -2,6 +2,7 @@ import axios, { AxiosRequestHeaders, Method } from 'axios';
 import cookie from 'react-cookies';
 import appconfig from '../appconfig';
 import { userInfoStorage } from '../globalStorages';
+import { c_token } from './cookies';
 
 // 更新services里的接口的方法：npm run openapi
 
@@ -22,7 +23,7 @@ service.interceptors.request.use(
   config => {
     //token
     if (config && config.headers) {
-      config.headers.authorization = 'bearer ' + (userInfoStorage.value.token || '');
+      config.headers.authorization = 'Bearer ' + (c_token() || '');
     }
     return config;
   },

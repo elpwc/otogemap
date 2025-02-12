@@ -1,1 +1,1 @@
-export type UserInfo = { name: string | undefined; token: string | undefined };
+export type UserInfo = { email: string | undefined; token: string | undefined };

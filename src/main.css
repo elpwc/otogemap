@@ -88,3 +88,56 @@ menu button.select {
   border-bottom-color: rgb(117, 117, 117);
   background-color: rgb(201, 201, 201);
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 120px;
+  border-left-color: rgb(173, 173, 173);
+  border-top-color: rgb(173, 173, 173);
+  border-right-color: black;
+  border-bottom-color: black;
+  border-width: 3px;
+  border-style: solid;
+  z-index: 1145141;
+}
+
+.dropdown-content button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 8px 12px;
+}
+
+.dropdown-content button:hover {
+  background-color: rgb(241, 241, 241);
+}
+
+.dropdown-content a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.dropdownbutton {
+  background-color: white;
+  border-left-color: rgb(173, 173, 173);
+  border-top-color: rgb(173, 173, 173);
+  border-right-color: black;
+  border-bottom-color: black;
+  border-width: 3px;
+  border-style: solid;
+  font-size: large;
+  cursor: pointer;
+  user-select: none;
+  height: 100%;
+  margin: 0;
+  padding: 0 5px;
+}

@@ -11,6 +11,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import RegisterCompletePage from './pages/RegisterCompletePage';
 import Test from './pages/Test';
+import Favorites from './pages/Favorites';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
 
           <Route path="chuni" element={<Navigate to="chuni/ja" replace />}></Route>
           <Route path="chuni/ja" element={<MapPage game={Game.chuni} version={GameVersion.ja} />}></Route>
-          <Route path="chuni/inter" element={<MapPage game={Game.chuni} version={GameVersion.ja} />}></Route>
+          <Route path="chuni/inter" element={<MapPage game={Game.chuni} version={GameVersion.inter} />}></Route>
 
           <Route path="ongk" element={<MapPage game={Game.ongeki} />}></Route>
 
@@ -32,6 +34,8 @@ function App() {
           <Route path="register" element={<RegisterPage />}></Route>
           <Route path="registerComp" element={<RegisterCompletePage />}></Route>
           <Route path="about" element={<About />}></Route>
+          <Route path="favorites" element={<Favorites />}></Route>
+          <Route path="profile" element={<Profile />}></Route>
 
           <Route path="test" element={<Test />}></Route>
           <Route path="404" element={<ErrorPage />}></Route>

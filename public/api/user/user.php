@@ -28,7 +28,7 @@ switch ($request_type) {
 
     @$name = trim((string)($data->name));
     @$email = trim((string)($data->email));
-    //@$verify_code = trim((string)($data->verify_code));
+    @$token = trim((string)($data->token));
     @$pw = trim((string)($data->pw));
 
     //if ($_SESSION["verify_code"] != '' && $verify_code == $_SESSION["verify_code"]) {
@@ -52,8 +52,6 @@ switch ($request_type) {
       // exist
       echo json_encode(["res" => "exist"]);
     } else {
-      $email_result = send_register_verification_mail($email, generate_verification_code($email));
-
       if ($email_result) {
         // not exist
         $sql = 'INSERT 
@@ -61,12 +59,14 @@ switch ($request_type) {
       VALUES ("' . $name . '","' . md5($pw) . '","' . $email . '");
       ';
 
+
         $result = mysqli_query($sqllink, $sql);
         if ($result == true) {
           echo json_encode(["res" => "ok"]);
         } else {
           echo json_encode(["res" => "unknown_error"]);
         }
+        $email_result = send_register_verification_mail($email, generate_verification_code($email));
       } else {
 
         echo json_encode(["res" => "email_failed"]);
@@ -77,6 +77,27 @@ switch ($request_type) {
     // }
 
     break;
+  case 'GET':
+    @$email = trim((string)($data->email));
+
+    $sql = 'SELECT `id`, `name`, `email`, `is_banned`, `auth`, `verified` FROM `user` 
+    WHERE `email`="' . $email . '" AND `is_deleted`=0
+    ;';
+
+    $result = mysqli_query($sqllink, $sql);
+
+    if ($result->num_rows > 0) {
+      // exist
+      $user = mysqli_fetch_assoc($result);
+      echo json_encode([
+        "res" => "ok",
+        "user" => $user
+      ]);
+    } else {
+      // not exist
+      echo json_encode(["res" => "not_exist"]);
+    }
+
   case 'PATCH':
     @$id = trim((string)($data->id));
     @$name = trim((string)($data->name));

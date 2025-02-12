@@ -9,6 +9,10 @@ require '../private/admin.php';
 require '../utils/utils.php';
 require '../utils/sqlgenerator.php';
 require '../utils/cors.php';
+require '../private/verifygen.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 session_start();
 
@@ -25,7 +29,7 @@ $result = '';
 switch ($request_type) {
   case 'POST':
 
-    @$name_email = trim((string)($data->name));
+    @$name_email = trim((string)($data->email));
     @$pw = trim((string)($data->pw));
 
     // user exist
@@ -44,9 +48,9 @@ switch ($request_type) {
 
     if (/*($user_result->num_rows > 0) ||*/($email_result->num_rows > 0)) {
       // exist
-      @$token = md5(((string)time()) + $name);
+      @$token = gen_token($name_email, 72000);
       $_SESSION["token"] = $token;
-      echo json_encode(["res" => "ok", "token" => $token]);
+      echo json_encode(["res" => "ok", "email" => $name_email, "token" => $token]);
     } else {
       // not exist
       echo json_encode(["res" => "fail", 'status' => 401]);

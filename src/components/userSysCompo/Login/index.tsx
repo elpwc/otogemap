@@ -2,11 +2,12 @@ import { Formik, Form, Field } from 'formik';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { userInfoStorage } from '../../../globalStorages';
-import { c_autoLogin, c_token, c_userName } from '../../../utils/cookies';
+import { c_autoLogin, c_pw, c_token, c_userName } from '../../../utils/cookies';
 import './index.css';
 import axios from 'axios';
 import request from '../../../utils/request';
 import salt1000 from '../../../resources/icons/salt1000.png';
+import { loginUser } from '../../../utils/userUtils';
 
 interface P {}
 
@@ -20,21 +21,11 @@ export default (props: P) => {
   const defaultValues = {
     name: '',
     password: '',
-    autoLogin: false,
+    autoLogin: true,
   };
 
   const [initialValues, setinitialValues]: [any, any] = useState(defaultValues);
   const [tip, settip]: [string, any] = useState('');
-
-  const loginUser = async ({ name, password }: { name: string; password: string }) => {
-    return request<any>('/user/login.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: { name, password },
-    });
-  };
 
   useEffect(() => {
     document.title = 'Otogemap - Login';
@@ -47,25 +38,25 @@ export default (props: P) => {
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
           if (values.password !== '') {
-            if (values.name !== '') {
-              loginUser({ name: values.name, password: values.password })
+            if (values.email !== '') {
+              loginUser({ email: values.email, password: values.password })
                 .then(e => {
-                  console.log(e);
                   const res = e.res;
                   switch (res) {
                     case 'ok':
-                      const token = e.data.user.token;
-                      const name = e.data.user.name;
-                      userInfoStorage.set({ name, token });
+                      const token = e.token;
+                      const email = e.email;
+                      userInfoStorage.set({ email, token });
+
+                      c_token(token);
+                      c_userName(email);
 
                       if (values.autoLogin) {
-                        c_token(token);
-                        c_userName(name);
                         c_autoLogin(true);
+                        c_pw(values.password);
                       } else {
-                        c_token('');
-                        c_userName('');
                         c_autoLogin(false);
+                        c_pw('');
                       }
 
                       resetForm();
@@ -77,7 +68,7 @@ export default (props: P) => {
                       settip('EMAIL不存在 or PASSWORD不正、失敗');
                       break;
                     default:
-                      settip('成功');
+                      settip('ERROR');
                       break;
                   }
                 })
@@ -96,7 +87,7 @@ export default (props: P) => {
           <Form className="login-form">
             <img src={salt1000} height={'100px'} width={'100px'} />
             <label className="">
-              <Field id="name" name="name" className="login-input" placeholder="Email" />
+              <Field id="email" name="email" className="login-input" placeholder="Email" />
             </label>
 
             <label className="">
