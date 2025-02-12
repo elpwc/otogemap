@@ -75,7 +75,7 @@ export const Main = () => {
       <menu>
         <Link to={'./mamadx/' + currentVer}>
           <button
-            className={currentGame === 'mamadx' && !isAboutOrLogin ? 'select' : ''}
+            className={'retro-button ' + (currentGame === 'mamadx' && !isAboutOrLogin ? 'select' : '')}
             onClick={() => {
               setcurrentGame('mamadx');
               setisAboutOrLogin('');
@@ -87,7 +87,7 @@ export const Main = () => {
 
         <Link to={'./chuni/' + currentVer}>
           <button
-            className={currentGame === 'chuni' && !isAboutOrLogin ? 'select' : ''}
+            className={'retro-button ' + (currentGame === 'chuni' && !isAboutOrLogin ? 'select' : '')}
             onClick={() => {
               setcurrentGame('chuni');
               setisAboutOrLogin('');
@@ -98,7 +98,7 @@ export const Main = () => {
         </Link>
         <Link to={'./ongk/'}>
           <button
-            className={currentGame === 'ongk' && !isAboutOrLogin ? 'select' : ''}
+            className={'retro-button ' + (currentGame === 'ongk' && !isAboutOrLogin ? 'select' : '')}
             onClick={() => {
               setcurrentGame('ongk');
               setisAboutOrLogin('');
@@ -116,7 +116,7 @@ export const Main = () => {
       <menu style={{ visibility: currentGame === 'ongk' ? 'hidden' : 'visible' }}>
         <Link to={'./' + (currentGame === '' ? 'mamadx' : currentGame) + '/ja'}>
           <button
-            className={currentVer === 'ja' && !isAboutOrLogin ? 'select' : ''}
+            className={'retro-button ' + (currentVer === 'ja' && !isAboutOrLogin ? 'select' : '')}
             onClick={() => {
               setcurrentVer('ja');
               setisAboutOrLogin('');
@@ -127,7 +127,7 @@ export const Main = () => {
         </Link>
         <Link to={'./' + (currentGame === '' ? 'mamadx' : currentGame) + '/inter'}>
           <button
-            className={currentVer === 'inter' && !isAboutOrLogin ? 'select' : ''}
+            className={'retro-button ' + (currentVer === 'inter' && !isAboutOrLogin ? 'select' : '')}
             onClick={() => {
               setcurrentVer('inter');
               setisAboutOrLogin('');
@@ -137,6 +137,7 @@ export const Main = () => {
           </button>
         </Link>
         <button
+          className="retro-button"
           onClick={() => {
             switch (currentGame) {
               case 'mamadx':
@@ -171,7 +172,7 @@ export const Main = () => {
       <menu>
         {isLogin() ? (
           <div className="dropdown">
-            <button className="dropdownbutton" onClick={() => setShowDropdown(!showDropdown)}>
+            <button className="dropdownbutton retro-button" onClick={() => setShowDropdown(!showDropdown)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path
                   fillRule="evenodd"
@@ -231,7 +232,7 @@ export const Main = () => {
 
         <Link to={'./about'}>
           <button
-            className={isAboutOrLogin === 'about' ? 'select' : ''}
+            className={'retro-button ' + (isAboutOrLogin === 'about' ? 'select' : '')}
             onClick={() => {
               setisAboutOrLogin('about');
             }}

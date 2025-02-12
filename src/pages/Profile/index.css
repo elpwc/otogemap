@@ -1,0 +1,131 @@
+.profile-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.profile-card {
+  background: #f0f0f0;
+  border: 2px solid;
+  border-color: #d6d6d6 #808080 #808080 #d6d6d6;
+  box-shadow: 1px 1px 0 0 #000000;
+}
+
+.profile-content {
+  padding: 1rem;
+}
+
+.info-group {
+  margin-bottom: 1rem;
+}
+
+.info-group label {
+  display: block;
+  color: #000000;
+  font-size: 0.9rem;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  margin-bottom: 0.3rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+}
+
+.info-row span {
+  font-size: 1rem;
+  color: #000000;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+}
+
+.win95-btn {
+  padding: 0.3rem 1rem;
+  background: #ececec;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  color: #000000;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.win95-btn:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 0.4rem 0.9rem 0.2rem 1.1rem;
+}
+
+.edit-name-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.name-input {
+  padding: 0.3rem;
+  background: #ffffff;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.verified-badge, .unverified-badge {
+  padding: 0.2rem 0.5rem;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 0.8rem;
+  border: 2px solid;
+}
+
+.verified-badge {
+  background: #c1ffc1;
+  border-color: #808080 #ffffff #ffffff #808080;
+  color: #006400;
+}
+
+.unverified-badge {
+  background: #ffb5a6;
+  border-color: #808080 #ffffff #ffffff #808080;
+  color: #8b4513;
+}
+
+.button-group {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    margin: 0.5rem auto;
+    padding: 0 0.5rem;
+  }
+  
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  
+  .edit-name-container {
+    flex-direction: column;
+  }
+  
+  .edit-buttons {
+    width: 100%;
+  }
+  
+  .win95-btn {
+    width: 100%;
+  }
+}

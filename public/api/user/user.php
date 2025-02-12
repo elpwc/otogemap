@@ -78,7 +78,8 @@ switch ($request_type) {
 
     break;
   case 'GET':
-    @$email = trim((string)($data->email));
+    @$email = trim((string)($_GET['email']));
+    error_log(($email));
 
     $sql = 'SELECT `id`, `name`, `email`, `is_banned`, `auth`, `verified` FROM `user` 
     WHERE `email`="' . $email . '" AND `is_deleted`=0
@@ -98,6 +99,7 @@ switch ($request_type) {
       echo json_encode(["res" => "not_exist"]);
     }
 
+    break;
   case 'PATCH':
     @$id = trim((string)($data->id));
     @$name = trim((string)($data->name));
@@ -114,11 +116,11 @@ switch ($request_type) {
     if ($is_deleted !== null) $update_fields[] = "`is_deleted`=$is_deleted";
     if ($is_banned !== null) $update_fields[] = "`is_banned`=$is_banned";
     if ($auth !== null) $update_fields[] = "`auth`=$auth";
-    if ($email !== '') $update_fields[] = "`email`='$email'";
     if ($verified !== null) $update_fields[] = "`verified`=$verified";
 
     if (!empty($update_fields)) {
-      $sql = "UPDATE `user` SET " . implode(', ', $update_fields) . " WHERE `id`=$id;";
+      $sql = "UPDATE `user` SET " . implode(', ', $update_fields) . " WHERE `email`='$email';";
+      error_log($sql);
       $result = mysqli_query($sqllink, $sql);
 
       if ($result == true) {
