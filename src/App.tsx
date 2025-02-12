@@ -10,6 +10,7 @@ import { Game, GameVersion } from './utils/enums';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import RegisterCompletePage from './pages/RegisterCompletePage';
+import Test from './pages/Test';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="registerComp" element={<RegisterCompletePage />}></Route>
           <Route path="about" element={<About />}></Route>
 
+          <Route path="test" element={<Test />}></Route>
           <Route path="404" element={<ErrorPage />}></Route>
           <Route path="*" element={<ErrorPage />}></Route>
         </Route>
