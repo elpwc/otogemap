@@ -225,7 +225,7 @@ export const Main = () => {
         ) : (
           <Link to={'./login'}>
             <button
-              className={isAboutOrLogin === 'login' ? 'select' : ''}
+              className={'retro-button ' + (isAboutOrLogin === 'login' ? 'select' : '')}
               onClick={() => {
                 setisAboutOrLogin('login');
               }}
