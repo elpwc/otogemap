@@ -127,7 +127,9 @@ export default () => {
           </div>
 
           <div className="button-group">
-            <button className="primary-btn win95-btn">Password変更</button>
+            <button className="primary-btn win95-btn" onClick={() => {
+              navigate('/resetpassword');
+            }}>Password変更</button>
           </div>
         </div>
       </div>

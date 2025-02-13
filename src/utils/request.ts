@@ -12,7 +12,7 @@ const service = axios.create({
   baseURL: appconfig.apiBaseURL + '',
   timeout: 5000,
   responseType: 'json',
-  //withCredentials: true,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json;charset=utf-8',
   },

@@ -3,7 +3,7 @@
 // header("Access-Control-Allow-Origin: http://localhost:3001");
 // header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
 // header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Authorization");
-header('Access-Control-Allow-Origin: http://localhost:3001');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Credentials: true');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

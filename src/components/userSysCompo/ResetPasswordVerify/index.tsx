@@ -17,10 +17,7 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   const defaultValues = {
-    email: '',
-    name: '',
-    password: '',
-    password2: '',
+    email: new URLSearchParams(mylocation.search).get('email') ?? '',
   };
 
   const [recaptchaToken, setrecaptchaToken]: [string | null, any] = useState(null);
@@ -50,9 +47,7 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
-          if (values.password !== '' && values.password === values.password2) {
             if (values.email !== '') {
-              if (values.name !== '') {
                 if (recaptchaToken) {
                   createUser({ email: values.email, password: values.password, name: values.name, token: recaptchaToken })
                     .then(e => {
@@ -81,15 +76,10 @@ export default (props: P) => {
                 } else {
                   settip('reCAPTCHA認証未完成');
                 }
-              } else {
-                settip('Nickname入力！');
-              }
             } else {
               settip('Email入力！');
             }
-          } else {
-            settip('Password不一致');
-          }
+
         }}
       >
         {({ values }) =>
@@ -100,15 +90,6 @@ export default (props: P) => {
               <img src={salt1000} height={'100px'} width={'100px'} />
               <label className="register-form-item-container">
                 <Field type="email" id="email" name="email" className="register-input" placeholder="Email" />
-              </label>
-              <label className="register-form-item-container">
-                <Field type="password" id="password" name="password" className="register-input" placeholder="Password" />
-              </label>
-              <label className="register-form-item-container">
-                <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回目" />
-              </label>
-              <label className="register-form-item-container">
-                <Field id="name" name="name" className="register-input" placeholder="Nickname" />
               </label>
               <div>
                 {recaptchaLoading && <div className="register-tip">reCAPTCHA Loading...</div>}
@@ -128,7 +109,7 @@ export default (props: P) => {
               </div>
               <div className="register-form-item-container">
                 <button type="submit" className="retro-button register-button">
-                  ACCOUNT作成
+                  Send Reset Password Email
                 </button>
                 <div className="register-tip">{tip}</div>
                 <Link to="/login">LOGIN</Link>

@@ -24,20 +24,26 @@ export const Main = () => {
     }
   };
 
-  const autoLogin = () => {
-    loginUser({ email: c_userName(), password: c_pw() }).then(e => {
-      const res = e.res;
-      if (res === 'ok') {
-        const token = e.token;
-        const email = e.email;
-        userInfoStorage.set({ email, token });
+  const autoLogin = (onlogin: () => void) => {
+    loginUser({ email: c_userName(), password: c_pw() })
+      .then(e => {
+        const res = e.res;
+        if (res === 'ok') {
+          const token = e.token;
+          const email = e.email;
+          userInfoStorage.set({ email, token });
 
-        c_token(token);
-        c_userName(email);
-      } else {
+          c_token(token);
+          c_userName(email);
+
+          onlogin();
+        } else {
+          logout();
+        }
+      })
+      .catch(e => {
         logout();
-      }
-    });
+      });
   };
 
   // init Menu select status from URL
@@ -71,8 +77,9 @@ export const Main = () => {
 
   useEffect(() => {
     setisMobile(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent));
-    autoLogin();
-    checkLogin();
+    autoLogin(() => {
+      checkLogin();
+    });
   }, []);
 
   const MenuGame = () => {

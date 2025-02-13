@@ -14,9 +14,13 @@ export const valiLogin = () => {
       'Content-Type': 'application/json',
     },
     data: {},
-  }).then(e => {
-    console.log(e)
   })
+    .then(e => {
+      console.log(e);
+    })
+    .catch(e => {
+      console.log(e);
+    });
 };
 
 export const logout = () => {
@@ -27,12 +31,32 @@ export const logout = () => {
   c_autoLogin(false);
 };
 
- export const loginUser = async ({ email, password }: { email: string; password: string }) => {
-    return request<any>('/user/login.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: { email, password },
-    });
-  };
+export const loginUser = async ({ email, password }: { email: string; password: string }) => {
+  return request<any>('/user/login.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { email, password },
+  });
+};
+
+export const createUser = async ({ email, name, password, token }: { email: string; name: string; password: string; token: string }) => {
+  return request<any>('/user/user.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { email, name, password, token },
+  });
+};
+
+export const resetPassword = async ({ email, password }: { email: string; password: string }) => {
+  return request<any>('/user/user.php', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { email, password },
+  });
+};

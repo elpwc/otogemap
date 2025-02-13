@@ -29,7 +29,7 @@ switch ($request_type) {
     @$name = trim((string)($data->name));
     @$email = trim((string)($data->email));
     @$token = trim((string)($data->token));
-    @$pw = trim((string)($data->pw));
+    @$pw = trim((string)($data->password));
 
     //if ($_SESSION["verify_code"] != '' && $verify_code == $_SESSION["verify_code"]) {
 

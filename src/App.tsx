@@ -13,6 +13,8 @@ import RegisterCompletePage from './pages/RegisterCompletePage';
 import Test from './pages/Test';
 import Favorites from './pages/Favorites';
 import Profile from './pages/Profile';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import ResetPasswordVerifyPage from './pages/ResetPasswordVerifyPage';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
           <Route path="login" element={<LoginPage />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>
           <Route path="registerComp" element={<RegisterCompletePage />}></Route>
+          <Route path="resetpassword" element={<ResetPasswordPage />}></Route>
+          <Route path="resetpasswordverify" element={<ResetPasswordVerifyPage />}></Route>
           <Route path="about" element={<About />}></Route>
           <Route path="favorites" element={<Favorites />}></Route>
           <Route path="profile" element={<Profile />}></Route>

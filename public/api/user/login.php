@@ -30,7 +30,7 @@ switch ($request_type) {
   case 'POST':
 
     @$name_email = trim((string)($data->email));
-    @$pw = trim((string)($data->pw));
+    @$pw = trim((string)($data->password));
 
     // user exist
     // $usersql = 'SELECT `name` FROM `user`
@@ -41,7 +41,7 @@ switch ($request_type) {
     $emailsql = 'SELECT `email` FROM `user`
     WHERE `email`="' . $name_email . '" AND `pw`="' . md5($pw) . '" AND `is_deleted`=0 AND `is_banned`=0 AND `verified`=1
     ;';
-
+    
     //$user_result = mysqli_query($sqllink, $usersql);
 
     $email_result = mysqli_query($sqllink, $emailsql);

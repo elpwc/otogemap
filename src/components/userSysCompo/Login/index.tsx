@@ -106,7 +106,10 @@ export default (props: P) => {
                 LOGIN
               </button>
               <div className="login-tip">{tip}</div>
+            </div>
+            <div className="login-form-item-container login-form-footer-buttons-container">
               <Link to="/register">新Account</Link>
+              <Link to={'/resetpasswordverify?email=' + values.email}>Password忘却</Link>
             </div>
           </Form>
         )}
