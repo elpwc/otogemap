@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import ReCaptchaV2 from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '../../../global';
@@ -127,10 +127,11 @@ export default (props: P) => {
                 />
               </div>
               <div className="register-form-item-container">
-                <button type="submit" className="shahow-button register-button">
+                <button type="submit" className="retro-button register-button">
                   ACCOUNT作成
                 </button>
                 <div className="register-tip">{tip}</div>
+                <Link to="/login">LOGIN</Link>
               </div>
             </Form>
           )

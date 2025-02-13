@@ -102,7 +102,7 @@ export default (props: P) => {
             </div>
 
             <div className="login-form-item-container">
-              <button type="submit" className="shahow-button login-button">
+              <button type="submit" className="retro-button login-button">
                 LOGIN
               </button>
               <div className="login-tip">{tip}</div>

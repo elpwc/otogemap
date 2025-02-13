@@ -3,6 +3,7 @@
   height: 100%;
   justify-content: center;
   background-color: #e9d1ed;
+  background: linear-gradient(151deg, rgba(233,209,237,1) 0%, rgba(233,209,237,1) 36%, rgba(0,212,255,1) 100%);
 }
 
 #about {
@@ -11,7 +12,7 @@
   border-color: rgb(211, 211, 211);
   border-style: solid;
   border-radius: 10px;
-  box-shadow: 8px 6px 12px 0px #f0b0ff;
+  box-shadow: -1px 1px 13px 0px #9c9c9c;;
   padding: 30px 20px 50px 20px;
   margin: 20px;
   width: fit-content;
