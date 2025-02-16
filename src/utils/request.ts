@@ -109,6 +109,9 @@ const request = <T = any>(url: string, options?: RequestOptions): Promise<T> => 
         //paramsSerializer: options?.paramsSerializer,
         timeout: options?.timeout,
         timeoutErrorMessage: options?.timeoutMessage,
+        headers: options?.headers ?? {
+          'Content-Type': 'application/json',
+        },
       })
       .then((response: any) => {
         // console.log(response);

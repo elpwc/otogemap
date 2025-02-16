@@ -9,7 +9,7 @@ import CHUNI_DATA_JA from '../../data/chuni_data_ja.json';
 import CHUNI_DATA_IN from '../../data/chuni_data_in.json';
 import ONGEKI_DATA_JA from '../../data/ongeki_data_ja.json';
 import { Game, GameVersion } from '../../utils/enums';
-import { StoreInfo } from '../../utils/store';
+import { StoreInfo_ } from '../../utils/store';
 
 interface P {
   game: Game;
@@ -23,7 +23,7 @@ export default (props: P) => {
 
   // let currentId: string = params.id as string;
 
-  const [info, setinfo]: [{ storesInfo: StoreInfo[]; currentGame: Game; currentArea: GameVersion }, any] = useState({
+  const [info, setinfo]: [{ storesInfo: StoreInfo_[]; currentGame: Game; currentArea: GameVersion }, any] = useState({
     storesInfo: [],
     currentGame: Game.maimaidx,
     currentArea: GameVersion.ja,
@@ -34,7 +34,7 @@ export default (props: P) => {
   }, []);
 
   const selectData = () => {
-    let t_info: { storesInfo: StoreInfo[]; currentGame: Game; currentArea: GameVersion } = {
+    let t_info: { storesInfo: StoreInfo_[]; currentGame: Game; currentArea: GameVersion } = {
       storesInfo: [],
       currentGame: Game.maimaidx,
       currentArea: GameVersion.ja,

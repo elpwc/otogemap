@@ -4,7 +4,7 @@
  * 邮件验证
  */
 
-require '../utils/utils.php';
+require dirname(__FILE__) . '/../utils/utils.php';
 
 session_start();
 

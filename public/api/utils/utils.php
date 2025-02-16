@@ -5,9 +5,9 @@
  * @author wniko
  */
 
-require('../private/illegal_words_list.php');
-require '../plugin/Lib_Smtp.php';
-require '../utils/mailSender.php';
+require dirname(__FILE__) . '/../private/illegal_words_list.php';
+require dirname(__FILE__) . '/../plugin/Lib_Smtp.php';
+require dirname(__FILE__) . '/../utils/mailSender.php';
 
 /**
  * 防注入
@@ -26,6 +26,34 @@ function anti_inj($text)
     $res = str_ireplace('<link', '<scramble', $res);
 
     return $res;
+}
+
+function escape_string($sqllink, $str)
+{
+    if ($str === null) return null;
+    return mysqli_real_escape_string($sqllink, trim((string)$str));
+}
+
+function prepare_bind_execute($sqllink, $sql, $types, $params)
+{
+    $stmt = mysqli_prepare($sqllink, $sql);
+    if ($stmt === false) {
+        return false;
+    }
+
+    if (!empty($params)) {
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+    }
+
+    $result = mysqli_stmt_execute($stmt);
+    if ($result === false) {
+        mysqli_stmt_close($stmt);
+        return false;
+    }
+
+    $query_result = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
+    return $query_result;
 }
 
 /**

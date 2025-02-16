@@ -7,4 +7,5 @@ export enum Game {
   maimaidx,
   chuni,
   ongeki,
+  maimai,
 }

@@ -1,6 +1,6 @@
 <?php
-require '../utils/cors.php';
-require '../private/verifygen.php';
+require dirname(__FILE__) . '/../utils/cors.php';
+require dirname(__FILE__) . '/../private/verifygen.php';
 
 session_start();
 

@@ -4,7 +4,7 @@ import './index.css';
 import { AttributionControl, MapContainer, Marker, Popup, ScaleControl, TileLayer, useMapEvents } from 'react-leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import '../../../node_modules/leaflet/dist/images/marker-icon.png';
-import { StoreInfo } from '../../utils/store';
+import { StoreInfo, StoreInfo_ } from '../../utils/store';
 import { icon, point } from 'leaflet';
 import maimarker from '../../resources/markers/mai.png';
 import chunimarker from '../../resources/markers/chuni.png';
@@ -25,9 +25,10 @@ import { Divider } from '../Divider';
 import { AREA_LIST } from '../../data/area_list';
 import { Game, GameVersion } from '../../utils/enums';
 import { c_lat, c_lng, c_showfilter, c_zoom } from '../../utils/cookies';
+import request from '../../utils/request';
 
 interface P {
-  storesInfo: StoreInfo[];
+  storesInfo: StoreInfo_[];
   currentGame: Game;
   currentArea: GameVersion;
 }
@@ -53,7 +54,6 @@ const MapEventHandler = () => {
 };
 
 export default (props: P) => {
-  useEffect(() => {}, []);
   const [filterOpen, setfilterOpen] = useState(c_showfilter() === '' ? true : c_showfilter() === 'true');
   const [businessStartTime, setbusinessStartTime] = useState(0);
   const [businessEndTime, setbusinessEndTime] = useState(24);
@@ -61,6 +61,8 @@ export default (props: P) => {
   const [selectedGameCenter, setselectedGameCenter] = useState('all');
   const [businessTimeAvailability, setbusinessTimeAvailability] = useState(false);
   const [searchKeyword, setsearchKeyword] = useState('');
+
+  const [currentStoreList, setcurrentStoreList] = useState([]);
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -99,7 +101,54 @@ export default (props: P) => {
       .replace(/\u3000/g, ' ');
   };
 
-  const getFilteredStoresList = (pref_name: string = 'all', gamecenterId: string = 'all') => {
+  const Game2String = (game: Game) => {
+    switch (game) {
+      case Game.maimaidx:
+        return 'maimaidx';
+      case Game.chuni:
+        return 'chuni';
+      case Game.ongeki:
+        return 'ongeki';
+      case Game.maimai:
+        return 'maimai';
+      default:
+        return '';
+    }
+  };
+
+  const GameVersion2String = (game: GameVersion) => {
+    switch (game) {
+      case GameVersion.inter:
+        return 'inter';
+      case GameVersion.ja:
+        return 'ja';
+      default:
+        return '';
+    }
+  };
+
+  const getFilteredStoresList = () => {
+    request(
+      `/store.php?arcade_type=${Game2String(props.currentGame)}&version_type=${GameVersion2String(props.currentArea)}&` +
+        (selectedGameCenter !== 'all' ? `type=${selectedGameCenter}` : '') +
+        `&country=${props.currentArea === GameVersion.ja ? 'Japan' : selectedPref === 'all' ? '' : selectedPref}&adminlv1=${
+          props.currentArea === GameVersion.ja ? (selectedPref === 'all' ? '' : selectedPref) : ''
+        }&search=${searchKeyword}` +
+        (businessTimeAvailability ? `&business_hours_start=${businessStartTime}&business_hours_end=${businessEndTime}` : ''),
+      {
+        method: 'GET',
+      }
+    )
+      .then(e => {
+        setcurrentStoreList(e.stores);
+        console.log(e);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  const old_getFilteredStoresList = (pref_name: string = 'all', gamecenterId: string = 'all') => {
     return props.storesInfo.filter(storeInfo => {
       let result = true;
       if (pref_name !== 'all') {
@@ -120,6 +169,9 @@ export default (props: P) => {
     });
   };
 
+  useEffect(() => {
+    getFilteredStoresList();
+  }, [props.currentGame, props.currentArea, selectedPref, selectedGameCenter, businessStartTime, businessEndTime, businessTimeAvailability, searchKeyword]);
   return (
     <>
       <div style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -162,11 +214,11 @@ export default (props: P) => {
                           setselectedPref(e.target.value);
                         }}
                       >
-                        <option value={'all'}>{'全部 (' + getFilteredStoresList().length + ')'}</option>
+                        <option value={'all'}>{'全部 (' + currentStoreList.length + ')'}</option>
                         {AREA_LIST.map(area => {
                           return (
                             <option key={area} value={area}>
-                              {area + ' (' + getFilteredStoresList(area).length + ')'}
+                              {area + ' (' + currentStoreList.length + ')'}
                             </option>
                           );
                         })}
@@ -184,11 +236,11 @@ export default (props: P) => {
                         setselectedGameCenter(e.target.value);
                       }}
                     >
-                      <option value={'all'}>{'全部 (' + getFilteredStoresList().length + ')'}</option>
+                      <option value={'all'}>{'全部'}</option>
                       {GAME_CENTER_LIST.map(gameCenter => {
                         return (
                           <option key={gameCenter.id} value={gameCenter.id}>
-                            {gameCenter.name + ' (' + getFilteredStoresList(selectedPref, gameCenter.id).length + ')'}
+                            {gameCenter.name}
                           </option>
                         );
                       })}
@@ -259,7 +311,7 @@ export default (props: P) => {
           <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
           <LeafletLocateControl position="bottomright" />
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {getFilteredStoresList(selectedPref, selectedGameCenter).map(storeInfo => {
+          {currentStoreList.map((storeInfo: StoreInfo) => {
             return (
               <Marker key={storeInfo.mapURL} position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
                 <Popup>
@@ -295,8 +347,8 @@ export default (props: P) => {
                       ) : (
                         <p>
                           営業時間：
-                          {storeInfo.business_hours_start.toString().padStart(2, '0')}:{storeInfo.business_minute_start.toString().padStart(2, '0')}~
-                          {storeInfo.business_hours_end.toString().padStart(2, '0')}:{storeInfo.business_minute_end.toString().padStart(2, '0')}
+                          {storeInfo.business_hours_start?.toString().padStart(2, '0')}:{storeInfo.business_minute_start?.toString().padStart(2, '0')}~
+                          {storeInfo.business_hours_end?.toString().padStart(2, '0')}:{storeInfo.business_minute_end?.toString().padStart(2, '0')}
                         </p>
                       )}
                       <button className="editButton">編集</button>
@@ -313,7 +365,7 @@ export default (props: P) => {
                       <button
                         className="editButton"
                         onClick={() => {
-                          const amount = prompt('筐体数量：', storeInfo.arcade_amount.toString());
+                          const amount = prompt('筐体数量：', storeInfo.arcade_amount?.toString());
                         }}
                       >
                         編集

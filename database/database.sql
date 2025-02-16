@@ -2,11 +2,12 @@ CREATE DATABASE IF NOT EXISTS `otogemap` DEFAULT CHARSET UTF8MB4;
 
 CREATE TABLE IF NOT EXISTS `store`(
 	`id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `type` VARCHAR(8) NOT NULL,
+    `type` VARCHAR(32) NOT NULL,
     `name` VARCHAR(100) NOT NULL,
-    `desc` VARCHAR(1024),
+    `desc` VARCHAR(2048),
     `address` VARCHAR(1024),
     `mapURL` VARCHAR(1024),
+    `country` VARCHAR(100),
     `adminlv1` VARCHAR(100),
     `adminlv2` VARCHAR(100),
     `adminlv3` VARCHAR(100),
@@ -27,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `store`(
 
 CREATE TABLE IF NOT EXISTS `arcade`(
 	`id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `type` VARCHAR(8) NOT NULL,
+    `type` VARCHAR(16) NOT NULL,
     `version_type` VARCHAR(8) NOT NULL,
     `sid` INT UNSIGNED NOT NULL,
     `arcade_amount` INT,

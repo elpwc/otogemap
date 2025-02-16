@@ -4,22 +4,21 @@
  * 地标后端
  */
 
-require '../private/dbcfg.php';
-require '../private/admin.php';
-require '../utils/utils.php';
-require '../utils/sqlgenerator.php';
-require '../utils/cors.php';
-require '../private/verifygen.php';
+require dirname(__FILE__) . '/../private/dbcfg.php';
+require dirname(__FILE__) . '/../private/admin.php';
+require dirname(__FILE__) . '/../utils/utils.php';
+require dirname(__FILE__) . '/../utils/sqlgenerator.php';
+require dirname(__FILE__) . '/../utils/cors.php';
+require dirname(__FILE__) . '/../private/verifygen.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 session_start();
 
-$request_type = $_SERVER['REQUEST_METHOD']; //请求类型GET POST PUT DELETE
-$json = file_get_contents('php://input'); //获取CURL GET POST PUT DELETE 请求的数据
+$request_type = $_SERVER['REQUEST_METHOD'];
+$json = file_get_contents('php://input');
 $data = json_decode($json);
-
 
 $sqllink = @mysqli_connect(HOST, USER, PASS, DBNAME) or die('数据库连接出错');
 mysqli_set_charset($sqllink, 'utf8mb4');
@@ -28,40 +27,30 @@ $result = '';
 
 switch ($request_type) {
   case 'POST':
+    $email = escape_string($sqllink, $data->email);
+    $pw = md5(trim((string)($data->password)));
 
-    @$name_email = trim((string)($data->email));
-    @$pw = trim((string)($data->password));
+    $sql = "SELECT `email` FROM `user`
+            WHERE `email` = ? AND `pw` = ? AND `is_deleted` = 0 
+            AND `is_banned` = 0 AND `verified` = 1";
 
-    // user exist
-    // $usersql = 'SELECT `name` FROM `user`
-    // WHERE `name`="' . $name_email . '" AND `pw`="' . $pw . '" AND `is_deleted`=0 AND `is_banned`=0
-    // ;';
+    $result = prepare_bind_execute($sqllink, $sql, "ss", [$email, $pw]);
 
-    // email exist
-    $emailsql = 'SELECT `email` FROM `user`
-    WHERE `email`="' . $name_email . '" AND `pw`="' . md5($pw) . '" AND `is_deleted`=0 AND `is_banned`=0 AND `verified`=1
-    ;';
-    
-    //$user_result = mysqli_query($sqllink, $usersql);
-
-    $email_result = mysqli_query($sqllink, $emailsql);
-
-    if (/*($user_result->num_rows > 0) ||*/($email_result->num_rows > 0)) {
-      // exist
-      @$token = gen_token($name_email, 72000);
+    if ($result && mysqli_num_rows($result) > 0) {
+      $token = gen_token($email, 72000);
       $_SESSION["token"] = $token;
-      echo json_encode(["res" => "ok", "email" => $name_email, "token" => $token]);
+      echo json_encode(["res" => "ok", "email" => $email, "token" => $token]);
     } else {
-      // not exist
       echo json_encode(["res" => "fail", 'status' => 401]);
     }
     break;
+
   case 'DELETE':
-    // 退出登录
     unset($_SESSION['token']);
     session_destroy();
     echo json_encode(["res" => "ok"]);
     break;
+
   default:
     echo json_encode(["res" => "unknown"]);
     break;
