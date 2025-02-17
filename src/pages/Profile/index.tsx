@@ -49,7 +49,7 @@ export default () => {
   };
 
   useEffect(() => {
-    document.title = 'プロフィール';
+    document.title = 'OtogeMap - ' + c_userName();
     refreshUserInfo();
   }, []);
 

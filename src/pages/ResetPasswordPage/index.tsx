@@ -43,7 +43,7 @@ export default (props: P) => {
   }, [mylocation.search]);
 
   useEffect(() => {
-    // document.title = '';
+    document.title = 'OtogeMap - RESET PASSWORD';
   }, []);
 
   return (

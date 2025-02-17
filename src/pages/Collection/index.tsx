@@ -43,7 +43,7 @@ export default (props: P) => {
   };
 
   useEffect(() => {
-    // document.title = '';
+    document.title = 'OtogeMap - 収蔵一覧';
     getCollections();
   }, []);
 

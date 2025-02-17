@@ -14,7 +14,7 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   useEffect(() => {
-    // document.title = '';
+    document.title = 'OtogeMap - ACCOUNT作成';
   }, []);
 
   return (
