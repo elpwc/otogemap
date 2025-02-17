@@ -27,6 +27,7 @@ import { Game, GameVersion } from '../../utils/enums';
 import { c_lat, c_lng, c_showfilter, c_uid, c_zoom } from '../../utils/cookies';
 import request from '../../utils/request';
 import MapPopup from '../MapPopup';
+import { isLogin } from '../../utils/userUtils';
 
 interface P {
   storesInfo: StoreInfo_[];
@@ -159,7 +160,6 @@ export default (props: P) => {
     )
       .then(e => {
         setcurrentStoreList(e.stores);
-        console.log(e);
       })
       .catch(e => {
         console.log(e);
@@ -200,7 +200,9 @@ export default (props: P) => {
   };
 
   useEffect(() => {
-    getCollectionList();
+    if (isLogin()) {
+      getCollectionList();
+    }
   }, [props.currentArea]);
 
   useEffect(() => {
@@ -341,7 +343,7 @@ export default (props: P) => {
                   }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z" />
+                    <path fillRule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z" />
                   </svg>
                 </button>
               </div>

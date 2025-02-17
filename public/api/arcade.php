@@ -4,6 +4,7 @@ require dirname(__FILE__) . '/private/admin.php';
 require dirname(__FILE__) . '/utils/utils.php';
 require dirname(__FILE__) . '/utils/sqlgenerator.php';
 require dirname(__FILE__) . '/utils/cors.php';
+require dirname(__FILE__) . '/user/token.php';
 
 session_start();
 
@@ -16,6 +17,10 @@ mysqli_set_charset($sqllink, 'utf8mb4');
 
 switch ($request_type) {
   case 'POST':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $sql = "INSERT INTO `arcade` 
             (`type`, `version_type`, `sid`, `arcade_amount`, `is_official`, `reviewed`)
             VALUES (?, ?, ?, ?, ?, ?)";
@@ -65,6 +70,10 @@ switch ($request_type) {
     break;
 
   case 'PATCH':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $id = escape_string($sqllink, $data->id);
     $update_fields = [];
     $params = [];
@@ -103,6 +112,10 @@ switch ($request_type) {
     break;
 
   case 'DELETE':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $id = escape_string($sqllink, $data->id);
     $sql = "UPDATE `arcade` SET `is_deleted` = 1 WHERE `id` = ?";
     $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);

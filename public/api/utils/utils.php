@@ -14,53 +14,53 @@ require dirname(__FILE__) . '/../utils/mailSender.php';
  */
 function anti_inj($text)
 {
-    $res = $text;
-    $res = str_replace('\'', '', $res);
-    $res = str_replace('"', '', $res);
-    $res = str_replace('_', ' ', $res);
+  $res = $text;
+  $res = str_replace('\'', '', $res);
+  $res = str_replace('"', '', $res);
+  $res = str_replace('_', ' ', $res);
 
-    $res = str_ireplace('<script', '<scramble', $res);
-    $res = str_ireplace('<object', '<scramble', $res);
-    $res = str_ireplace('<style', '<scramble', $res);
-    $res = str_ireplace('<iframe', '<scramble', $res);
-    $res = str_ireplace('<link', '<scramble', $res);
+  $res = str_ireplace('<script', '<scramble', $res);
+  $res = str_ireplace('<object', '<scramble', $res);
+  $res = str_ireplace('<style', '<scramble', $res);
+  $res = str_ireplace('<iframe', '<scramble', $res);
+  $res = str_ireplace('<link', '<scramble', $res);
 
-    return $res;
+  return $res;
 }
 
 function escape_string($sqllink, $str)
 {
-    if ($str === null) return null;
-    return mysqli_real_escape_string($sqllink, trim((string)$str));
+  if ($str === null) return null;
+  return mysqli_real_escape_string($sqllink, trim((string)$str));
 }
 function prepare_bind_execute($sqllink, $sql, $types, $params)
 {
-    $stmt = mysqli_prepare($sqllink, $sql);
-    if ($stmt === false) {
-        return false;
-    }
+  $stmt = mysqli_prepare($sqllink, $sql);
+  if ($stmt === false) {
+    return false;
+  }
 
-    if (!empty($params)) {
-        mysqli_stmt_bind_param($stmt, $types, ...$params);
-    }
+  if (!empty($params)) {
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+  }
 
-    $result = mysqli_stmt_execute($stmt);
-    if ($result === false) {
-        mysqli_stmt_close($stmt);
-        return false;
-    }
-
-    // 检查 SQL 语句类型
-    $query_type = strtoupper(strtok(trim($sql), " ")); // 获取 SQL 语句的第一个单词
-    if ($query_type === "SELECT") {
-        $query_result = mysqli_stmt_get_result($stmt);
-    } else {
-        // 非 SELECT 语句，返回影响的行数
-        $query_result = mysqli_stmt_affected_rows($stmt);
-    }
-
+  $result = mysqli_stmt_execute($stmt);
+  if ($result === false) {
     mysqli_stmt_close($stmt);
-    return $query_result;
+    return false;
+  }
+
+  // 检查 SQL 语句类型
+  $query_type = strtoupper(strtok(trim($sql), " ")); // 获取 SQL 语句的第一个单词
+  if ($query_type === "SELECT") {
+    $query_result = mysqli_stmt_get_result($stmt);
+  } else {
+    // 非 SELECT 语句，返回影响的行数
+    $query_result = mysqli_stmt_affected_rows($stmt);
+  }
+
+  mysqli_stmt_close($stmt);
+  return $query_result;
 }
 
 
@@ -69,44 +69,44 @@ function prepare_bind_execute($sqllink, $sql, $types, $params)
  */
 function cator_to_cn_censorship($text)
 {
-    $res = $text;
-    foreach (ILLEGAL_LIST as $word) {
-        $res = str_ireplace($word, str_repeat('*', mb_strlen($word)), $res);
-    }
-    return $res;
+  $res = $text;
+  foreach (ILLEGAL_LIST as $word) {
+    $res = str_ireplace($word, str_repeat('*', mb_strlen($word)), $res);
+  }
+  return $res;
 }
 
 
 
 function send_verification_code_mail($target, $verify_code)
 {
-    try {
-        $mail = new Lib_Smtp();
+  try {
+    $mail = new Lib_Smtp();
 
-        $mail->setServer(EMAIL_HOST, EMAIL_USER, EMAIL_PASS, EMAIL_PORT, true);
-        $mail->setFrom(EMAIL_MAIL);
-        $mail->setReceiver($target);
-        $mail->addAttachment("");
-        $mail->setMail(
-            "邮箱验证码",
-            '<h3>验证码是：<span>' . $verify_code . '</span></h3><p>有效期：5分钟</p>' . date('Y-m-d H:i:s')
-        );
-        return true;
-    } catch (Exception $e) {
-        return false;
-    }
+    $mail->setServer(EMAIL_HOST, EMAIL_USER, EMAIL_PASS, EMAIL_PORT, true);
+    $mail->setFrom(EMAIL_MAIL);
+    $mail->setReceiver($target);
+    $mail->addAttachment("");
+    $mail->setMail(
+      "邮箱验证码",
+      '<h3>验证码是：<span>' . $verify_code . '</span></h3><p>有效期：5分钟</p>' . date('Y-m-d H:i:s')
+    );
+    return true;
+  } catch (Exception $e) {
+    return false;
+  }
 }
 
 
-function send_register_verification_mail($target, $verify_code)
+function send_verification_mail($target, $verify_code, $isForgetPassword = false)
 {
-    $url_prefix = 'https://www.elpwc.com/otogemap/';
-    $url = $url_prefix . 'registercomp?acc=' . $target . '&v=' . $verify_code; //'https://www.elpwc.com/otogemap/';
+  $url_prefix = 'https://www.elpwc.com/otogemap/';
+  $url = $url_prefix . ($isForgetPassword ? ('resetpassword?acc=') : ('register?acc=')) . $target . '&v=' . $verify_code; //'https://www.elpwc.com/otogemap/';
 
-    $res =  sendMail(
-        $target,
-        "全国引誘地図 ACCOUNT認証",
-        '
+  $res =  sendMail(
+    $target,
+    "全国引誘地図 ACCOUNT認証",
+    '
         <div class="container">
   <style>
     p {
@@ -188,48 +188,49 @@ function send_register_verification_mail($target, $verify_code)
   <div class="header">
     <p>Otogemap - 全国引誘地図<br />ACCOUNT認証</p>
   </div>
-  <p class="text">全国引誘地図之ACCOUNT作成大感謝謝謝茄子！<br />
+  <p class="text">' . ($isForgetPassword ? '下之「ACCOUNT認証」link訪問後、PASSWORD RESET可能：<br /><br />
+    Click the link below to reset your password:' : '全国引誘地図之ACCOUNT作成大感謝謝謝茄子！<br />
     下之「ACCOUNT認証」link訪問後、ACCOUNT作成完了：<br /><br />
-    Click the link below to complete your registration:
+    Click the link below to complete your registration:') . '
   </p>
   <a class="button retro-button" href="' . $url . '" target="_blank">ACCOUNT認証</a>
-  <p style="color: rgb(0, 0, 0)">' . $url . '</p>
-  <p style="font-size: 10px; color: rgb(155, 155, 155)">Button URL: ' . date('Y-m-d H:i:s') . '</p>
+  <p style="color: rgb(0, 0, 0)">' . date('Y-m-d H:i:s') . '</p>
+  <p style="font-size: 10px; color: rgb(155, 155, 155);width: 100%; overflow-wrap: break-word;">Button URL: ' . $url . '</p>
 </div>
         '
-    );
-    if ($res) {
-        return true;
-    } else {
-        return false;
-    }
+  );
+  if ($res) {
+    return true;
+  } else {
+    return false;
+  }
 
-    // $url_prefix = 'http://localhost:3001/';
-    // $url = $url_prefix . 'registercomp?acc=' . $target . '&v=' . $verify_code; //'https://www.elpwc.com/otogemap/';
-    // try {
-    //     $mail = new Lib_Smtp();
+  // $url_prefix = 'http://localhost:3001/';
+  // $url = $url_prefix . 'registercomp?acc=' . $target . '&v=' . $verify_code; //'https://www.elpwc.com/otogemap/';
+  // try {
+  //     $mail = new Lib_Smtp();
 
-    //     $mail->setServer(EMAIL_HOST, EMAIL_USER, EMAIL_PASS, EMAIL_PORT, true);
-    //     $mail->setFrom(EMAIL_MAIL);
-    //     $mail->setReceiver($target);
-    //     $mail->addAttachment("");
-    //     $mail->setMail(
-    //         "全国引誘地図 ACCOUNT認証",
-    //         '<p>
-    //         下之「ACCOUNT認証」link訪問後、ACCOUNT作成完了：<br/>
-    //         Click the link below to complete your registration:
-    //         </p><br/>
-    //         <a href="' . $url . '" target="_blank"><h1> ACCOUNT認証 </h1></a><br/>
-    //         ' . date('Y-m-d H:i:s')
-    //     );
-    //     if($mail->send()){
-    //         error_log('114');
-    //         return true;
-    //     }else{
-    //         error_log('514');
-    //         return false;
-    //     }
-    // } catch (Exception $e) {
-    //     error_log($e->getMessage());
-    // }
+  //     $mail->setServer(EMAIL_HOST, EMAIL_USER, EMAIL_PASS, EMAIL_PORT, true);
+  //     $mail->setFrom(EMAIL_MAIL);
+  //     $mail->setReceiver($target);
+  //     $mail->addAttachment("");
+  //     $mail->setMail(
+  //         "全国引誘地図 ACCOUNT認証",
+  //         '<p>
+  //         下之「ACCOUNT認証」link訪問後、ACCOUNT作成完了：<br/>
+  //         Click the link below to complete your registration:
+  //         </p><br/>
+  //         <a href="' . $url . '" target="_blank"><h1> ACCOUNT認証 </h1></a><br/>
+  //         ' . date('Y-m-d H:i:s')
+  //     );
+  //     if($mail->send()){
+  //         error_log('114');
+  //         return true;
+  //     }else{
+  //         error_log('514');
+  //         return false;
+  //     }
+  // } catch (Exception $e) {
+  //     error_log($e->getMessage());
+  // }
 }

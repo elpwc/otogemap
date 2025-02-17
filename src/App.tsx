@@ -9,12 +9,11 @@ import About from './pages/About';
 import { Game, GameVersion } from './utils/enums';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import RegisterCompletePage from './pages/RegisterCompletePage';
 import Test from './pages/Test';
 import Collection from './pages/Collection';
 import Profile from './pages/Profile';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-import ResetPasswordVerifyPage from './pages/ResetPasswordVerifyPage';
+import EmailVerify from './components/userSysCompo/EmailVerify';
 
 function App() {
   return (
@@ -33,10 +32,9 @@ function App() {
           <Route path="ongk" element={<MapPage game={Game.ongeki} />}></Route>
 
           <Route path="login" element={<LoginPage />}></Route>
+          <Route path="emailverify" element={<EmailVerify />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>
-          <Route path="registerComp" element={<RegisterCompletePage />}></Route>
           <Route path="resetpassword" element={<ResetPasswordPage />}></Route>
-          <Route path="resetpasswordverify" element={<ResetPasswordVerifyPage />}></Route>
           <Route path="about" element={<About />}></Route>
           <Route path="collection" element={<Collection />}></Route>
           <Route path="profile" element={<Profile />}></Route>

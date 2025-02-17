@@ -26,27 +26,6 @@
       border-style: solid;
     }
 
-    @media (any-hover: hover) {
-      .retro-button:hover {
-        border-left-width: 2px;
-        border-top-width: 2px;
-        border-right-width: 4px;
-        border-bottom-width: 4px;
-      }
-    }
-
-    .retro-button:active {
-      border-left-width: 4px;
-      border-top-width: 4px;
-      border-right-width: 2px;
-      border-bottom-width: 2px;
-      border-left-color: #505050;
-      border-top-color: #505050;
-      border-right-color: rgb(212, 212, 212);
-      border-bottom-color: rgb(212, 212, 212);
-      background-color: rgb(241, 241, 241);
-    }
-
     .button {
       color: black;
       text-align: center;
@@ -84,6 +63,7 @@
     Click the link below to complete your registration:
   </p>
   <a class="button retro-button" href="' . $url . '" target="_blank">ACCOUNT認証</a>
-  <p style="color: rgb(0, 0, 0)">' . $url . '</p>
-  <p style="font-size: 10px; color: rgb(155, 155, 155)">Button URL: ' . $url . '</p>
+  <p style="color: rgb(0, 0, 0)">' . $date . '</p>
+  <p style="font-size: 10px; color: rgb(155, 155, 155); width: 100%; overflow-wrap: break-word;">Button URL: ' . $url
+    . '</p>
 </div>

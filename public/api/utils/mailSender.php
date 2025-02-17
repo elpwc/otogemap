@@ -31,7 +31,10 @@ function sendMail($addr, $subject, $body)
     $mail->Body = $body;
 
     // 发送
-    return $mail->send();
+    $mail->SMTPDebug = SMTP::DEBUG_OFF;
+    $res = $mail->send();
+
+    return $res;
   } catch (Exception $e) {
     return false;
   }

@@ -20,7 +20,7 @@ export const Main = () => {
         valiLogin();
       } catch (error) {
         console.log('Session expired, clearing login info.');
-        c_token('');
+        //c_token('');
       }
     }
   };

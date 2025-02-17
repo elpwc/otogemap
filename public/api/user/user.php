@@ -4,7 +4,7 @@ require dirname(__FILE__) . '/../private/admin.php';
 require dirname(__FILE__) . '/../utils/utils.php';
 require dirname(__FILE__) . '/../utils/sqlgenerator.php';
 require dirname(__FILE__) . '/../utils/cors.php';
-require dirname(__FILE__) . '/../private/verifygen.php';
+require dirname(__FILE__) . '/token.php';
 
 session_start();
 
@@ -20,6 +20,12 @@ switch ($request_type) {
     $name = escape_string($sqllink, $data->name);
     $email = escape_string($sqllink, $data->email);
     $pw = trim((string)($data->password));
+    $token = escape_string($sqllink, $data->token);
+
+    if (!verify_verification_code($token, $email)) {
+      echo json_encode(["res" => "email_verify_failed"]);
+      return;
+    }
 
     $sql = "SELECT `email` FROM `user` WHERE `email` = ? AND `is_deleted` = 0";
     $result = prepare_bind_execute($sqllink, $sql, "s", [$email]);
@@ -27,20 +33,15 @@ switch ($request_type) {
     if ($result && mysqli_num_rows($result) > 0) {
       echo json_encode(["res" => "exist"]);
     } else {
+      $sql = "INSERT INTO `user` (`name`, `pw`, `email`, `verified`) VALUES (?, ?, ?, ?)";
+      $params = [$name, md5($pw), $email, 1];
+
+      $result = prepare_bind_execute($sqllink, $sql, "sssi", $params);
+
       if ($result) {
-        $sql = "INSERT INTO `user` (`name`, `pw`, `email`) VALUES (?, ?, ?)";
-        $params = [$name, md5($pw), $email];
-
-        $result = prepare_bind_execute($sqllink, $sql, "sss", $params);
-
-        if ($result) {
-          echo json_encode(["res" => "ok"]);
-          $email_result = send_register_verification_mail($email, generate_verification_code($email));
-        } else {
-          echo json_encode(["res" => "unknown_error"]);
-        }
+        echo json_encode(["res" => "ok"]);
       } else {
-        echo json_encode(["res" => "email_failed"]);
+        echo json_encode(["res" => "database_error"]);
       }
     }
     break;
@@ -66,6 +67,11 @@ switch ($request_type) {
     break;
 
   case 'PATCH':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
+
     $email = escape_string($sqllink, $data->email);
     $update_fields = [];
     $params = [];
@@ -82,10 +88,15 @@ switch ($request_type) {
 
     foreach ($fields as $field => $type) {
       if (isset($data->$field)) {
-        $update_fields[] = "`$field` = ?";
-        $params[] = $type === 's' ?
-          escape_string($sqllink, $data->$field) :
-          $data->$field;
+        if ($field === 'pw') {
+          $update_fields[] = "`$field` = ?";
+          $params[] = md5(trim((string)($data->$field)));
+        } else {
+          $update_fields[] = "`$field` = ?";
+          $params[] = $type === 's' ?
+            escape_string($sqllink, $data->$field) :
+            $data->$field;
+        }
         $types .= $type;
       }
     }
@@ -108,6 +119,10 @@ switch ($request_type) {
     break;
 
   case 'DELETE':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $id = escape_string($sqllink, $data->id);
 
     $sql = "UPDATE `user` SET `is_deleted` = 1 WHERE `id` = ?";

@@ -18,22 +18,22 @@ export default (props: P) => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(mylocation.search);
-    const email = queryParams.get('email');
-    const token = queryParams.get('t');
-    if (email) {
-      if (email !== '') {
-        c_userName(email);
-        setemail(email);
+    const email_q = queryParams.get('acc');
+    const token_q = queryParams.get('v');
+    if (email_q) {
+      if (email_q !== '') {
+        c_userName(email_q);
+        setemail(email_q);
       } else {
         setemail(c_userName());
       }
     } else {
       setemail(c_userName());
     }
-    if (token) {
-      if (token !== '') {
-        c_token(token);
-        settoken(token);
+    if (token_q) {
+      if (token_q !== '') {
+        c_token(token_q);
+        settoken(token_q);
       } else {
         settoken(c_token());
       }

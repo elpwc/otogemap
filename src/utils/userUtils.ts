@@ -3,7 +3,7 @@ import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
 import request from './request';
 
 export const isLogin = () => {
-  return c_token() !== '';
+  return c_token() !== '' && c_userName() !== '' && c_uid() !== '';
   //return userInfoStorage.value.token !== undefined;
 };
 
@@ -26,7 +26,7 @@ export const valiLogin = () => {
 export const logout = () => {
   userInfoStorage.set({ token: undefined, email: undefined });
   c_userName('');
-  c_token('');
+  //c_token('');
   c_pw('');
   c_uid();
   c_autoLogin(false);
@@ -52,13 +52,10 @@ export const createUser = async ({ email, name, password, token }: { email: stri
   });
 };
 
-export const resetPassword = async ({ email, password }: { email: string; password: string }) => {
+export const resetPassword = async ({ email, pw }: { email: string; pw: string }) => {
   return request<any>('/user/user.php', {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: { email, password },
+    data: { email, pw },
   });
 };
 

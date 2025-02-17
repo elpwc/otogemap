@@ -4,6 +4,7 @@ require dirname(__FILE__) . '/private/admin.php';
 require dirname(__FILE__) . '/utils/utils.php';
 require dirname(__FILE__) . '/utils/sqlgenerator.php';
 require dirname(__FILE__) . '/utils/cors.php';
+require dirname(__FILE__) . '/user/token.php';
 
 session_start();
 
@@ -16,6 +17,10 @@ mysqli_set_charset($sqllink, 'utf8mb4');
 
 switch ($request_type) {
   case 'POST':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $sql = "INSERT INTO `collection` (`store_id`, `uid`) VALUES (?, ?)";
 
     $params = [
@@ -28,6 +33,10 @@ switch ($request_type) {
     break;
 
   case 'GET':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error", "collections" => []]);
+      return;
+    }
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
     $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
     $game_version = isset($_GET['game_version']) ? escape_string($sqllink, $_GET['game_version']) : null;
@@ -57,6 +66,10 @@ switch ($request_type) {
     break;
 
   case 'PATCH':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $id = escape_string($sqllink, $data->id);
     $update_fields = [];
     $params = [];
@@ -89,6 +102,10 @@ switch ($request_type) {
     break;
 
   case 'DELETE':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
     $store_id = escape_string($sqllink, $data->store_id);
     $uid = escape_string($sqllink, $data->uid);
     $sql = "DELETE FROM `collection` WHERE `store_id` = ? AND `uid` = ?";
