@@ -34,10 +34,10 @@ export default (props: P) => {
             地図
           </p>
           <p className="updateMsg">店舗情報最近更新：2025/1/8</p>
-          <p className="updateMsg">Website最近更新：2025/1/8</p>
+          <p className="updateMsg">Website最近更新：2025/2/17</p>
           <p>
             Dev&Maintain：
-            <a href="https://github.com/elpwc" target="_blank">
+            <a href="https://www.elpwc.com/" target="_blank">
               うに@elpwc
             </a>
           </p>
@@ -47,7 +47,7 @@ export default (props: P) => {
               全国音游地图
             </a>
           </p>
-          <p>連絡→elpwc@hotmail.com迄</p>
+          <p>連絡→elpwc@hotmail.com 迄</p>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 .login-container {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(151deg, rgba(233, 209, 237, 1) 0%, rgba(233, 209, 237, 1) 36%, rgba(0, 212, 255, 1) 100%);
   min-height: 100%;
   display: flex;
   padding-top: 100px;
