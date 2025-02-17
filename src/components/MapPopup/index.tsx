@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import { ArcadeInfo, StoreInfo, StoreInfoRequest, UpdateStoreRequest } from '../../utils/store';
+import { ArcadeInfo, StoreInfoRequest, UpdateStoreRequest } from '../../utils/store';
 import { Divider } from '../Divider';
 import request from '../../utils/request';
 import { GAME_TYPE_LIST } from '../../utils/enums';
-import TimeFilter from '../TimeFilter';
 import { CancelSVG, OKSVG } from '../../resources/svgs';
 import TimePicker from '../TimePicker';
 import { formatTime } from '../../utils/utils';
 import { c_uid } from '../../utils/cookies';
+import { registerAlert } from '../../utils/userUtils';
 
 interface P {
   storeInfo: StoreInfoRequest;
@@ -56,6 +56,9 @@ export default (props: P) => {
 
   const handleTimeEditStart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!registerAlert()) {
+      return;
+    }
     setEditingStartHour(props.storeInfo.business_hours_start ?? -1);
     setEditingStartMinute(props.storeInfo.business_minute_start ?? 0);
     setEditingEndHour(props.storeInfo.business_hours_end ?? -1);
@@ -94,6 +97,9 @@ export default (props: P) => {
 
   const handleAmountEditStart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!registerAlert()) {
+      return;
+    }
     setIsEditingAmount(!isEditingAmount);
     setIsAddingArcade(false);
     setEditingArcades(editingArcades.map(a => ({ ...a, isEditing: false })));
@@ -101,6 +107,9 @@ export default (props: P) => {
 
   const handleDescEditStart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!registerAlert()) {
+      return;
+    }
     setEditingDesc(props.storeInfo.desc || '');
     setIsEditingDesc(true);
   };
@@ -164,6 +173,9 @@ export default (props: P) => {
   };
 
   const handleArcadeEditStart = (arcade: ArcadeEditInfo) => {
+    if (!registerAlert()) {
+      return;
+    }
     setEditingArcades(
       editingArcades.map(a =>
         a.id === arcade.id
@@ -194,6 +206,9 @@ export default (props: P) => {
   };
 
   const handleAddArcade = () => {
+    if (!registerAlert()) {
+      return;
+    }
     if (!newArcadeType || !newArcadeAmount) {
       alert('種類数量入力！');
       return;
@@ -217,6 +232,9 @@ export default (props: P) => {
   };
 
   const handleCollection = () => {
+    if (!registerAlert()) {
+      return;
+    }
     if (props.storeInfo.is_collection) {
       request('/collection.php', {
         method: 'DELETE',
@@ -437,7 +455,15 @@ export default (props: P) => {
                 </div>
               </div>
             ) : (
-              <button className="addArcadeButton" onClick={() => setIsAddingArcade(true)}>
+              <button
+                className="addArcadeButton"
+                onClick={() => {
+                  if (!registerAlert()) {
+                    return;
+                  }
+                  setIsAddingArcade(true);
+                }}
+              >
                 + 新種筐体追加
               </button>
             ))}

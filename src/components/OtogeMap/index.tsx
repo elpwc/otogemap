@@ -24,7 +24,7 @@ import { GAME_CENTER_LIST } from '../../data/game_center_list';
 import { Divider } from '../Divider';
 import { AREA_LIST } from '../../data/area_list';
 import { Game, GameVersion } from '../../utils/enums';
-import { c_lat, c_lng, c_showfilter, c_zoom } from '../../utils/cookies';
+import { c_lat, c_lng, c_showfilter, c_uid, c_zoom } from '../../utils/cookies';
 import request from '../../utils/request';
 import MapPopup from '../MapPopup';
 
@@ -64,6 +64,7 @@ export default (props: P) => {
   const [searchKeyword, setsearchKeyword] = useState('');
 
   const [currentStoreList, setcurrentStoreList] = useState([]);
+  const [currentCollectionList, setcurrentCollectionList] = useState([]);
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -149,6 +150,18 @@ export default (props: P) => {
       });
   };
 
+  const getCollectionList = () => {
+    request(`/collection.php?uid=${c_uid()}?game_version=${GameVersion2String(props.currentArea)}`, {
+      method: 'GET',
+    })
+      .then(e => {
+        setcurrentCollectionList(e.collections);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   const old_getFilteredStoresList = (pref_name: string = 'all', gamecenterId: string = 'all') => {
     return props.storesInfo.filter(storeInfo => {
       let result = true;
@@ -169,6 +182,10 @@ export default (props: P) => {
       return result;
     });
   };
+
+  useEffect(() => {
+    getCollectionList();
+  }, [props.currentArea]);
 
   useEffect(() => {
     getFilteredStoresList();

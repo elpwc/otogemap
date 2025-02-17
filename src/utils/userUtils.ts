@@ -61,3 +61,15 @@ export const resetPassword = async ({ email, password }: { email: string; passwo
     data: { email, password },
   });
 };
+
+/**
+ * 判断是否已登录，未登录则弹出提示，返回是否已登录
+ * @param {string} [text] 显示的提示文本，默认为'登録後操作可'
+ * @returns {boolean} 是否已经登录
+ */
+export const registerAlert = (text?: string) => {
+  if (!isLogin()) {
+    alert(text ?? '登録後操作可');
+  }
+  return isLogin();
+};
