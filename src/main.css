@@ -64,6 +64,7 @@ menu button {
   position: absolute;
   top: 100%;
   left: 0;
+  width: 10rem;
   background-color: white;
   border-left-color: rgb(173, 173, 173);
   border-top-color: rgb(173, 173, 173);
@@ -75,7 +76,7 @@ menu button {
 }
 
 .dropdown-content button {
-  width: max-content;
+  width: 100%;
   text-align: left;
   border: none;
   background: none;
