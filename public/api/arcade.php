@@ -34,16 +34,33 @@ switch ($request_type) {
     break;
 
   case 'GET':
-    $id = escape_string($sqllink, $_GET['id']);
+    $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
+    $sid = isset($_GET['sid']) ? escape_string($sqllink, $_GET['sid']) : null;
 
-    $sql = "SELECT * FROM `arcade` WHERE `id` = ? AND `is_deleted` = 0";
-    $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
+    if ($id) {
+      $sql = "SELECT * FROM `arcade` WHERE `id` = ? AND `is_deleted` = 0";
+      $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
+    } else if ($sid) {
+      $sql = "SELECT * FROM `arcade` WHERE `sid` = ? AND `is_deleted` = 0";
+      $result = prepare_bind_execute($sqllink, $sql, "s", [$sid]);
+    } else {
+      echo json_encode(["res" => "error", "msg" => "Missing id or sid parameter"]);
+      break;
+    }
 
     if ($result && mysqli_num_rows($result) > 0) {
-      $arcade = mysqli_fetch_assoc($result);
-      echo json_encode(["res" => "ok", "arcade" => $arcade]);
+      if ($id) {
+        $arcade = mysqli_fetch_assoc($result);
+        echo json_encode(["res" => "ok", "arcade" => $arcade]);
+      } else {
+        $arcades = [];
+        while ($arcade = mysqli_fetch_assoc($result)) {
+          $arcades[] = $arcade;
+        }
+        echo json_encode(["res" => "ok", "arcades" => $arcades]);
+      }
     } else {
-      echo json_encode(["res" => "not_exist"]);
+      echo json_encode(["res" => "not_exist", "arcades" => []]);
     }
     break;
 

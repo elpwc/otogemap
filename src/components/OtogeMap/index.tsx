@@ -19,13 +19,14 @@ import taitomarker from '../../resources/markers/taito.png';
 import LeafletLocateControl from '../LeafletLocateControl';
 import JapanPreferenceSelector from '../JapanPreferenceSelector';
 import { motion } from 'framer-motion';
-import TimePicker from '../TimePicker';
+import TimeFilter from '../TimeFilter';
 import { GAME_CENTER_LIST } from '../../data/game_center_list';
 import { Divider } from '../Divider';
 import { AREA_LIST } from '../../data/area_list';
 import { Game, GameVersion } from '../../utils/enums';
 import { c_lat, c_lng, c_showfilter, c_zoom } from '../../utils/cookies';
 import request from '../../utils/request';
+import MapPopup from '../MapPopup';
 
 interface P {
   storesInfo: StoreInfo_[];
@@ -249,7 +250,7 @@ export default (props: P) => {
                 )}
 
                 <div className="filterSection">
-                  <TimePicker
+                  <TimeFilter
                     onDragEnd={(startTime, endTime) => {
                       setbusinessStartTime(startTime);
                       setbusinessEndTime(endTime);
@@ -260,6 +261,7 @@ export default (props: P) => {
                     startTimeValue={businessStartTime}
                     endTimeValue={businessEndTime}
                     availableValue={businessTimeAvailability}
+                    showAvailableCheckbox={true}
                   />
                 </div>
                 <div>
@@ -315,71 +317,13 @@ export default (props: P) => {
             return (
               <Marker key={storeInfo.mapURL} position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
                 <Popup>
-                  <div className="popupContents">
-                    <p id="storepopup_title">{storeInfo.name}</p>
-                    <p style={{ padding: '10px 0' }}>{storeInfo.address}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <a href={storeInfo.mapURL} target="_blank">
-                        <p>
-                          開 Google Map&nbsp;
-                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
-                            <path
-                              fillRule="evenodd"
-                              d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
-                            />
-                            <path fillRule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-                          </svg>
-                        </p>
-                      </a>
-                      <button style={{ border: 'none', backgroundColor: 'white', cursor: 'pointer' }}>
-                        <span style={{ color: 'gray' /*'#fbb160'*/ }}>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                          </svg>
-                        </span>
-                        <span>収蔵</span>
-                      </button>
-                    </div>
-                    <Divider style={{ margin: '10px 0' }} />
-                    <div className="businessTime popupItem">
-                      {storeInfo.business_hours_start === -1 && storeInfo.business_hours_end === -1 ? (
-                        <p>営業時間未知</p>
-                      ) : (
-                        <p>
-                          営業時間：
-                          {storeInfo.business_hours_start?.toString().padStart(2, '0')}:{storeInfo.business_minute_start?.toString().padStart(2, '0')}~
-                          {storeInfo.business_hours_end?.toString().padStart(2, '0')}:{storeInfo.business_minute_end?.toString().padStart(2, '0')}
-                        </p>
-                      )}
-                      <button className="editButton">編集</button>
-                    </div>
-                    <div className="arcadeAmount popupItem">
-                      {storeInfo.arcade_amount === -1 ? (
-                        <p>筐体数量未知</p>
-                      ) : (
-                        <p>
-                          筐体数量：
-                          {storeInfo.arcade_amount}台
-                        </p>
-                      )}
-                      <button
-                        className="editButton"
-                        onClick={() => {
-                          const amount = prompt('筐体数量：', storeInfo.arcade_amount?.toString());
-                        }}
-                      >
-                        編集
-                      </button>
-                    </div>
-                    <div>
-                      <div className="popupItem">
-                        <p>備考</p>
-                        <button className="editButton">編集</button>
-                      </div>
-
-                      <p style={{ margin: '0' }}>{storeInfo.arcade_amount}</p>
-                    </div>
-                  </div>
+                  <MapPopup
+                    storeInfo={storeInfo}
+                    onStoreUpdate={() => {
+                      // 重新获取店铺列表
+                      getFilteredStoresList();
+                    }}
+                  />
                 </Popup>
               </Marker>
             );

@@ -1,0 +1,39 @@
+.time-picker {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.time-select {
+  border: none;
+  outline: none;
+  padding: 2px;
+  font-size: 14px;
+  width: 45px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.time-select::-ms-expand {
+  display: none;
+}
+
+.time-separator {
+  margin: 0 2px;
+  color: #666;
+}
+
+.time-picker:hover {
+  border-color: #999;
+}
+
+.time-picker:focus-within {
+  border-color: #40a9ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}

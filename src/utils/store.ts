@@ -69,3 +69,13 @@ export interface CollectionInfo {
   create_date: Date;
   update_date: Date;
 }
+
+export interface UpdateStoreRequest {
+  id: number;
+  business_hours_start?: number;
+  business_minute_start?: number;
+  business_hours_end?: number;
+  business_minute_end?: number;
+  arcade_amount?: number;
+  desc?: string;
+}
