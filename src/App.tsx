@@ -11,7 +11,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import RegisterCompletePage from './pages/RegisterCompletePage';
 import Test from './pages/Test';
-import Favorites from './pages/Favorites';
+import Collection from './pages/Collection';
 import Profile from './pages/Profile';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ResetPasswordVerifyPage from './pages/ResetPasswordVerifyPage';
@@ -38,7 +38,7 @@ function App() {
           <Route path="resetpassword" element={<ResetPasswordPage />}></Route>
           <Route path="resetpasswordverify" element={<ResetPasswordVerifyPage />}></Route>
           <Route path="about" element={<About />}></Route>
-          <Route path="favorites" element={<Favorites />}></Route>
+          <Route path="collection" element={<Collection />}></Route>
           <Route path="profile" element={<Profile />}></Route>
 
           <Route path="test" element={<Test />}></Route>

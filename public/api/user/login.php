@@ -30,16 +30,17 @@ switch ($request_type) {
     $email = escape_string($sqllink, $data->email);
     $pw = md5(trim((string)($data->password)));
 
-    $sql = "SELECT `email` FROM `user`
+    $sql = "SELECT `email`, `id` FROM `user` 
             WHERE `email` = ? AND `pw` = ? AND `is_deleted` = 0 
             AND `is_banned` = 0 AND `verified` = 1";
 
     $result = prepare_bind_execute($sqllink, $sql, "ss", [$email, $pw]);
 
     if ($result && mysqli_num_rows($result) > 0) {
+      $user = mysqli_fetch_assoc($result);
       $token = gen_token($email, 72000);
       $_SESSION["token"] = $token;
-      echo json_encode(["res" => "ok", "email" => $email, "token" => $token, "uid" => mysqli_fetch_assoc($result)[0] . $id]);
+      echo json_encode(["res" => "ok", "email" => $email, "token" => $token, "uid" => $user['id']]);
     } else {
       echo json_encode(["res" => "fail", 'status' => 401]);
     }

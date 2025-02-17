@@ -33,6 +33,8 @@ main {
   border-right-width: 3px;
   border-bottom-width: 3px;
   border-style: solid;
+  
+  background: linear-gradient(151deg, rgba(233,209,237,1) 0%, rgba(233,209,237,1) 36%, rgba(0,212,255,1) 100%);
 }
 
 #headertitle {

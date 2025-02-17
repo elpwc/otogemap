@@ -35,7 +35,7 @@ switch ($request_type) {
       $sql = "SELECT * FROM `collection` WHERE `id` = ? AND `is_deleted` = 0";
       $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
     } else if ($uid) {
-      $sql = "SELECT c.*, s.name as store_name, s.address 
+      $sql = "SELECT c.*, s.name as store_name, s.address , s.lat, s.lng, s.mapURL
               FROM `collection` c 
               JOIN `store` s ON c.store_id = s.id 
               WHERE c.uid = ? AND c.is_deleted = 0";
@@ -49,7 +49,7 @@ switch ($request_type) {
       }
       echo json_encode(["res" => "ok", "collections" => $collections]);
     } else {
-      echo json_encode(["res" => "not_exist"]);
+      echo json_encode(["res" => "not_exist", "collections" => []]);
     }
     break;
 
