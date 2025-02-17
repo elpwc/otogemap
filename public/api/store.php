@@ -67,14 +67,32 @@ switch ($request_type) {
 
     // 搜索关键词
     $search = isset($_GET['search']) ? escape_string($sqllink, $_GET['search']) : null;
+    // 添加uid参数
+    $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
 
     if ($id) {
       // 获取单个商店信息
-      $sql = "SELECT DISTINCT s.* FROM `store` s 
-                LEFT JOIN `arcade` a ON s.id = a.sid 
-                WHERE s.id = ? AND s.is_deleted = 0";
-      $params = [$id];
-      $types = "s";
+      $sql = "SELECT DISTINCT s.*, 
+              CASE WHEN c.id IS NOT NULL THEN 1 ELSE 0 END as is_collection 
+              FROM `store` s 
+              LEFT JOIN `arcade` a ON s.id = a.sid 
+              LEFT JOIN `collection` c ON s.id = c.store_id AND c.is_deleted = 0";
+      
+      if ($uid) {
+        $sql .= " AND c.uid = ?";
+      }
+      
+      $sql .= " WHERE s.id = ? AND s.is_deleted = 0";
+      
+      $params = [];
+      $types = "";
+      
+      if ($uid) {
+        $params[] = $uid;
+        $types .= "s";
+      }
+      $params[] = $id;
+      $types .= "s";
 
       // 添加街机筛选条件
       if ($arcade_type) {
@@ -93,11 +111,25 @@ switch ($request_type) {
 
     } else {
       // 获取所有符合条件的商店列表
-      $sql = "SELECT DISTINCT s.* FROM `store` s 
-                LEFT JOIN `arcade` a ON s.id = a.sid 
-                WHERE s.is_deleted = 0";
+      $sql = "SELECT DISTINCT s.*, 
+              CASE WHEN c.id IS NOT NULL THEN 1 ELSE 0 END as is_collection 
+              FROM `store` s 
+              LEFT JOIN `arcade` a ON s.id = a.sid 
+              LEFT JOIN `collection` c ON s.id = c.store_id AND c.is_deleted = 0";
+      
+      if ($uid) {
+        $sql .= " AND c.uid = ?";
+      }
+      
+      $sql .= " WHERE s.is_deleted = 0";
+      
       $params = [];
       $types = "";
+      
+      if ($uid) {
+        $params[] = $uid;
+        $types .= "s";
+      }
 
       // 添加街机筛选条件
       if ($arcade_type) {

@@ -4,7 +4,7 @@ import './index.css';
 import { AttributionControl, MapContainer, Marker, Popup, ScaleControl, TileLayer, useMapEvents } from 'react-leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import '../../../node_modules/leaflet/dist/images/marker-icon.png';
-import { StoreInfo, StoreInfo_ } from '../../utils/store';
+import { StoreInfo, StoreInfo_, StoreInfoRequest } from '../../utils/store';
 import { icon, point } from 'leaflet';
 import maimarker from '../../resources/markers/mai.png';
 import chunimarker from '../../resources/markers/chuni.png';
@@ -319,7 +319,7 @@ export default (props: P) => {
           <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
           <LeafletLocateControl position="bottomright" />
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {currentStoreList.map((storeInfo: StoreInfo) => {
+          {currentStoreList.map((storeInfo: StoreInfoRequest) => {
             return (
               <Marker key={storeInfo.mapURL} position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
                 <Popup>

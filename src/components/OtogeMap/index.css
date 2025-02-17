@@ -104,4 +104,5 @@ select {
   border: none;
   cursor: pointer;
   color: #2d72d2;
+  width: max-content;
 }

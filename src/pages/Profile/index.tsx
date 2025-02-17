@@ -91,7 +91,11 @@ export default () => {
                 </div>
               ) : (
                 <>
-                  <span>{userinfo.name}</span>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <span>{`${userinfo.name}`}</span>
+                    <span style={{ color: 'gray' }}>{`(uid:${userinfo.id})`}</span>
+                  </div>
+
                   <button onClick={() => setIsEditingName(true)} className="edit-btn win95-btn">
                     編集
                   </button>
@@ -127,9 +131,14 @@ export default () => {
           </div>
 
           <div className="button-group">
-            <button className="primary-btn win95-btn" onClick={() => {
-              navigate('/resetpassword');
-            }}>Password変更</button>
+            <button
+              className="primary-btn win95-btn"
+              onClick={() => {
+                navigate('/resetpassword');
+              }}
+            >
+              Password変更
+            </button>
           </div>
         </div>
       </div>

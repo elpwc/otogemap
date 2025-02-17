@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router';
 import './main.css';
 import salt from './resources/icons/salt.png';
 import { isLogin, loginUser, logout, valiLogin } from './utils/userUtils';
-import { c_autoLogin, c_game, c_gamever, c_pw, c_token, c_userName } from './utils/cookies';
+import { c_autoLogin, c_game, c_gamever, c_pw, c_token, c_uid, c_userName } from './utils/cookies';
 import { userInfoStorage } from './globalStorages';
 
 export const Main = () => {
@@ -31,10 +31,12 @@ export const Main = () => {
         if (res === 'ok') {
           const token = e.token;
           const email = e.email;
+          const uid = e.uid;
           userInfoStorage.set({ email, token });
 
           c_token(token);
           c_userName(email);
+          c_uid(uid);
 
           onlogin();
         } else {

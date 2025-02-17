@@ -50,15 +50,18 @@
 
 .editingButtons {
   display: flex;
-  gap: 8px;
+  gap: 2px;
+  padding: 0 2px;
 }
 
 .confirmButton {
   background-color: white;
-  color: #2d72d2;
+  color: #017c07;
   cursor: pointer;
   padding: 2px 8px;
   width: fit-content;
+  border: 1px solid #017c07;
+  border-radius: 3px;
 }
 
 .cancelButton {
@@ -67,4 +70,19 @@
   cursor: pointer;
   padding: 2px 8px;
   width: fit-content;
+  border: 1px solid #a80909;
+  border-radius: 3px;
+}
+
+.collectionButton {
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  padding: 2px 3px;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+
+.collectionButton:hover {
+  background-color: #ebebeb;
 }

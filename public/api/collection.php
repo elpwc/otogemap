@@ -86,9 +86,10 @@ switch ($request_type) {
     break;
 
   case 'DELETE':
-    $id = escape_string($sqllink, $data->id);
-    $sql = "UPDATE `collection` SET `is_deleted` = 1 WHERE `id` = ?";
-    $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
+    $store_id = escape_string($sqllink, $data->store_id);
+    $uid = escape_string($sqllink, $data->uid);
+    $sql = "DELETE FROM `collection` WHERE `store_id` = ? AND `uid` = ?";
+    $result = prepare_bind_execute($sqllink, $sql, "ii", [$store_id, $uid]);
     echo json_encode(["res" => $result !== false ? "ok" : "error"]);
     break;
 }

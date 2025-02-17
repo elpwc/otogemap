@@ -48,6 +48,10 @@ export interface StoreInfo {
   update_date: Date;
 }
 
+export interface StoreInfoRequest extends StoreInfo {
+  is_collection: boolean;
+}
+
 export interface ArcadeInfo {
   id: number;
   type: string;

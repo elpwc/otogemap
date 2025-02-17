@@ -2,7 +2,7 @@ import { Formik, Form, Field } from 'formik';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { userInfoStorage } from '../../../globalStorages';
-import { c_autoLogin, c_pw, c_token, c_userName } from '../../../utils/cookies';
+import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from '../../../utils/cookies';
 import './index.css';
 import axios from 'axios';
 import request from '../../../utils/request';
@@ -46,10 +46,12 @@ export default (props: P) => {
                     case 'ok':
                       const token = e.token;
                       const email = e.email;
+                      const uid = e.uid;
                       userInfoStorage.set({ email, token });
 
                       c_token(token);
                       c_userName(email);
+                      c_uid(uid);
 
                       if (values.autoLogin) {
                         c_autoLogin(true);

@@ -1,5 +1,5 @@
 import { userInfoStorage } from '../globalStorages';
-import { c_autoLogin, c_pw, c_token, c_userName } from './cookies';
+import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
 import request from './request';
 
 export const isLogin = () => {
@@ -28,6 +28,7 @@ export const logout = () => {
   c_userName('');
   c_token('');
   c_pw('');
+  c_uid();
   c_autoLogin(false);
 };
 

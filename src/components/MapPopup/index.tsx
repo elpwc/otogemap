@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import { ArcadeInfo, StoreInfo, UpdateStoreRequest } from '../../utils/store';
+import { ArcadeInfo, StoreInfo, StoreInfoRequest, UpdateStoreRequest } from '../../utils/store';
 import { Divider } from '../Divider';
 import request from '../../utils/request';
 import { GAME_TYPE_LIST } from '../../utils/enums';
@@ -9,9 +9,10 @@ import TimeFilter from '../TimeFilter';
 import { CancelSVG, OKSVG } from '../../resources/svgs';
 import TimePicker from '../TimePicker';
 import { formatTime } from '../../utils/utils';
+import { c_uid } from '../../utils/cookies';
 
 interface P {
-  storeInfo: StoreInfo;
+  storeInfo: StoreInfoRequest;
   onStoreUpdate?: () => void;
 }
 
@@ -26,7 +27,6 @@ export default (props: P) => {
   const [isEditingAmount, setIsEditingAmount] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
 
-  // 编辑状态的临时值
   const [editingStartHour, setEditingStartHour] = useState(-1);
   const [editingStartMinute, setEditingStartMinute] = useState(-1);
   const [editingEndHour, setEditingEndHour] = useState(-1);
@@ -216,6 +216,30 @@ export default (props: P) => {
     });
   };
 
+  const handleCollection = () => {
+    if (props.storeInfo.is_collection) {
+      request('/collection.php', {
+        method: 'DELETE',
+        data: {
+          store_id: props.storeInfo.id,
+          uid: c_uid(),
+        },
+      }).then(() => {
+        props.onStoreUpdate?.();
+      });
+    } else {
+      request('/collection.php', {
+        method: 'POST',
+        data: {
+          store_id: props.storeInfo.id,
+          uid: c_uid(),
+        },
+      }).then(() => {
+        props.onStoreUpdate?.();
+      });
+    }
+  };
+
   return (
     <div className="popupContents" onClick={e => e.stopPropagation()}>
       <p id="storepopup_title">{props.storeInfo.name}</p>
@@ -233,13 +257,13 @@ export default (props: P) => {
             </svg>
           </p>
         </a>
-        <button style={{ border: 'none', backgroundColor: 'white', cursor: 'pointer' }}>
-          <span style={{ color: 'gray' /*'#fbb160'*/ }}>
+        <button className="flex collectionButton" onClick={handleCollection}>
+          <span style={{ color: props.storeInfo.is_collection ? '#fbb160' : 'gray' /*''*/ }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
               <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
             </svg>
           </span>
-          <span>収蔵</span>
+          <span>{props.storeInfo.is_collection ? '収蔵移出' : '収蔵'}</span>
         </button>
       </div>
       <Divider style={{ margin: '10px 0' }} />
@@ -342,7 +366,7 @@ export default (props: P) => {
                   <div className="arcadeTableColumn version">
                     {arcade.version_type === 'ja' ? '日本版' : arcade.version_type === 'inter' ? '国际版' : arcade.version_type === 'cn' ? '中国版' : '未知'}
                   </div>
-                  <div className="arcadeTableColumn amount">{(arcade.arcade_amount ?? 0) <= -1 ? '未知' : arcade.arcade_amount}台</div>
+                  <div className="arcadeTableColumn amount">{(arcade.arcade_amount ?? 0) <= -1 ? '？' : arcade.arcade_amount}台</div>
                   {isEditingAmount && (
                     <button className="editButton" onClick={() => handleArcadeEditStart(arcade)}>
                       編集
