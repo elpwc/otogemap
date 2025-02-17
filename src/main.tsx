@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import './main.css';
-import salt from './resources/icons/salt.png';
 import { isLogin, loginUser, logout, valiLogin } from './utils/userUtils';
-import { c_autoLogin, c_game, c_gamever, c_pw, c_token, c_uid, c_userName } from './utils/cookies';
+import { c_game, c_gamever, c_pw, c_token, c_uid, c_userName } from './utils/cookies';
 import { userInfoStorage } from './globalStorages';
 import { LinkSVG } from './resources/svgs';
+import Salt from './components/Salt';
 
 export const Main = () => {
   const [currentGame, setcurrentGame] = useState(c_game());
@@ -49,7 +49,6 @@ export const Main = () => {
       });
   };
 
-  // init Menu select status from URL
   const location = useLocation().pathname.split('/');
   useEffect(() => {
     if (location.length === 2) {
@@ -280,7 +279,7 @@ export const Main = () => {
         {isMobile ? (
           <>
             <div style={{ display: 'flex', marginLeft: '20px' }}>
-              <img src={salt} height={'30px'} />
+              <Salt originalPictureSize="small" imageSize="30px" />
               <p id="headertitle">全国引誘地図</p>
               <MenuOther />
             </div>
@@ -289,7 +288,7 @@ export const Main = () => {
           </>
         ) : (
           <>
-            <img src={salt} height={'30px'} />
+            <Salt originalPictureSize="small" imageSize="30px" />
             <p id="headertitle">全国引誘地図</p>
             <MenuGame />
             <MenuVer /> <MenuOther />

@@ -5,8 +5,8 @@ import ReCaptchaV2 from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '../../../global';
 import { Field, Form, Formik } from 'formik';
 import request from '../../../utils/request';
-import salt1000 from '../../../resources/icons/salt1000.png';
 import { c_token } from '../../../utils/cookies';
+import Salt from '../../Salt';
 
 interface P {
   email: string;
@@ -66,7 +66,7 @@ export default (props: P) => {
   return (
     <div className="register-container">
       <div className="register-form">
-        <img src={salt1000} height={'100px'} width={'100px'} />
+        <Salt />
         <label className="register-form-item-container">
           <p>{props.email}</p>
           <p>{tip}</p>

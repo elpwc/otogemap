@@ -5,9 +5,9 @@ import ReCaptchaV2 from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '../../../global';
 import { Field, Form, Formik } from 'formik';
 import request from '../../../utils/request';
-import salt1000 from '../../../resources/icons/salt1000.png';
 import { resetPassword } from '../../../utils/userUtils';
 import { c_token, c_userName } from '../../../utils/cookies';
+import Salt from '../../Salt';
 
 interface P {
   email: string;
@@ -76,7 +76,7 @@ export default (props: P) => {
             <p>君之Email中URL訪問後、ACCOUNT作成完了</p>
           ) : (
             <Form className="register-form">
-              <img src={salt1000} height={'100px'} width={'100px'} />
+              <Salt />
               <label className="register-form-item-container">{props.email}</label>
               <label className="register-form-item-container">
                 <Field type="password" id="password" name="password" className="register-input" placeholder="Password" />

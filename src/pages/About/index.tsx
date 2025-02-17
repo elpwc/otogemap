@@ -2,9 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
-import salt1000 from '../../resources/icons/salt1000.png';
-import axios from 'axios';
-import appconfig from '../../appconfig';
+import Salt from '../../components/Salt';
 
 interface P {}
 
@@ -22,7 +20,7 @@ export default (props: P) => {
   return (
     <div id="aboutContainer">
       <div id="about">
-        <img src={salt1000} height={'200px'} width={'200px'} />
+        <Salt imageSize="200px" />
         <div id="aboutItems" style={{ fontSize: '20px', fontWeight: '' }}>
           <p style={{ fontSize: '30px', fontWeight: 'bold', margin: '20px 0' }}>
             全国

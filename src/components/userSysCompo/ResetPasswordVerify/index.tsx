@@ -5,7 +5,7 @@ import ReCaptchaV2 from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '../../../global';
 import { Field, Form, Formik } from 'formik';
 import request from '../../../utils/request';
-import salt1000 from '../../../resources/icons/salt1000.png';
+import Salt from '../../Salt';
 
 interface P {}
 
@@ -47,39 +47,38 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
-            if (values.email !== '') {
-                if (recaptchaToken) {
-                  createUser({ email: values.email, password: values.password, name: values.name, token: recaptchaToken })
-                    .then(e => {
-                      const res = e.res;
-                      switch (res) {
-                        case 'ok':
-                          resetForm();
-                          settip('成功');
-                          setTimeout(() => {
-                            sethasRequestSend(true);
-                          }, 1000);
-                          //navigate('/login');
-                          break;
-                        case 'exist':
-                          settip('EMAIL既存在');
-                          break;
-                        case 'verifyfailed':
-                          settip('reCAPTCHA認証失敗');
-                          break;
-                        default:
-                          settip('ERROR');
-                          break;
-                      }
-                    })
-                    .catch(e => {});
-                } else {
-                  settip('reCAPTCHA認証未完成');
-                }
+          if (values.email !== '') {
+            if (recaptchaToken) {
+              createUser({ email: values.email, password: values.password, name: values.name, token: recaptchaToken })
+                .then(e => {
+                  const res = e.res;
+                  switch (res) {
+                    case 'ok':
+                      resetForm();
+                      settip('成功');
+                      setTimeout(() => {
+                        sethasRequestSend(true);
+                      }, 1000);
+                      //navigate('/login');
+                      break;
+                    case 'exist':
+                      settip('EMAIL既存在');
+                      break;
+                    case 'verifyfailed':
+                      settip('reCAPTCHA認証失敗');
+                      break;
+                    default:
+                      settip('ERROR');
+                      break;
+                  }
+                })
+                .catch(e => {});
             } else {
-              settip('Email入力！');
+              settip('reCAPTCHA認証未完成');
             }
-
+          } else {
+            settip('Email入力！');
+          }
         }}
       >
         {({ values }) =>
@@ -87,7 +86,7 @@ export default (props: P) => {
             <p>君之Email中URL訪問後、ACCOUNT作成完了</p>
           ) : (
             <Form className="register-form">
-              <img src={salt1000} height={'100px'} width={'100px'} />
+              <Salt />
               <label className="register-form-item-container">
                 <Field type="email" id="email" name="email" className="register-input" placeholder="Email" />
               </label>

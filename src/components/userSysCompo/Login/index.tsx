@@ -4,10 +4,8 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { userInfoStorage } from '../../../globalStorages';
 import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from '../../../utils/cookies';
 import './index.css';
-import axios from 'axios';
-import request from '../../../utils/request';
-import salt1000 from '../../../resources/icons/salt1000.png';
 import { loginUser } from '../../../utils/userUtils';
+import Salt from '../../Salt';
 
 interface P {}
 
@@ -87,7 +85,7 @@ export default (props: P) => {
       >
         {({ values }) => (
           <Form className="login-form">
-            <img src={salt1000} height={'100px'} width={'100px'} />
+            <Salt />
             <label className="">
               <Field id="email" name="email" className="login-input" placeholder="Email" />
             </label>
