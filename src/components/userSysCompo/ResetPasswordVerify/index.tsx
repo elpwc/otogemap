@@ -22,7 +22,7 @@ export default (props: P) => {
 
   const [recaptchaToken, setrecaptchaToken]: [string | null, any] = useState(null);
   const [initialValues, setinitialValues]: [any, any] = useState(defaultValues);
-  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(false);
+  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(true);
   const [tip, settip]: [string, any] = useState('');
   const [recaptchaLoading, setrecaptchaLoading]: [boolean, any] = useState(true);
   const [hasRequestSend, sethasRequestSend]: [boolean, any] = useState(false);
@@ -47,10 +47,12 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
+          setbuttonAvailable(false);
           if (values.email !== '') {
             if (recaptchaToken) {
               createUser({ email: values.email, password: values.password, name: values.name, token: recaptchaToken })
                 .then(e => {
+                  setbuttonAvailable(true);
                   const res = e.res;
                   switch (res) {
                     case 'ok':
@@ -72,7 +74,9 @@ export default (props: P) => {
                       break;
                   }
                 })
-                .catch(e => {});
+                .catch(e => {
+                  setbuttonAvailable(true);
+                });
             } else {
               settip('reCAPTCHA認証未完成');
             }
@@ -107,7 +111,7 @@ export default (props: P) => {
                 />
               </div>
               <div className="register-form-item-container">
-                <button type="submit" className="retro-button register-button">
+                <button type="submit" className="retro-button register-button" disabled={!buttonAvailable}>
                   Send Reset Password Email
                 </button>
                 <div className="register-tip">{tip}</div>

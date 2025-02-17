@@ -25,7 +25,7 @@ export default (props: P) => {
 
   const [recaptchaToken, setrecaptchaToken]: [string | null, any] = useState(null);
   const [initialValues, setinitialValues]: [any, any] = useState(defaultValues);
-  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(false);
+  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(true);
   const [tip, settip]: [string, any] = useState('');
   const [recaptchaLoading, setrecaptchaLoading]: [boolean, any] = useState(true);
   const [hasRequestSend, sethasRequestSend]: [boolean, any] = useState(false);
@@ -50,6 +50,7 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
+          setbuttonAvailable(false);
           if (values.password !== '' && values.password === values.password2) {
             if (values.email !== '') {
               if (values.name !== '') {
@@ -57,6 +58,7 @@ export default (props: P) => {
                   createUser({ email: values.email, password: values.password, name: values.name, token: recaptchaToken })
                     .then(e => {
                       const res = e.res;
+                      setbuttonAvailable(true);
                       switch (res) {
                         case 'ok':
                           resetForm();
@@ -77,7 +79,9 @@ export default (props: P) => {
                           break;
                       }
                     })
-                    .catch(e => {});
+                    .catch(e => {
+                      setbuttonAvailable(true);
+                    });
                 } else {
                   settip('reCAPTCHA認証未完成');
                 }
@@ -127,7 +131,7 @@ export default (props: P) => {
                 />
               </div>
               <div className="register-form-item-container">
-                <button type="submit" className="retro-button register-button">
+                <button type="submit" className="retro-button register-button" disabled={!buttonAvailable}>
                   ACCOUNT作成
                 </button>
                 <div className="register-tip">{tip}</div>

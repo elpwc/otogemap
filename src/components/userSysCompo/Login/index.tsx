@@ -23,6 +23,7 @@ export default (props: P) => {
   };
 
   const [initialValues, setinitialValues]: [any, any] = useState(defaultValues);
+  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(true);
   const [tip, settip]: [string, any] = useState('');
 
   useEffect(() => {
@@ -35,10 +36,12 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
+          setbuttonAvailable(false);
           if (values.password !== '') {
             if (values.email !== '') {
               loginUser({ email: values.email, password: values.password })
                 .then(e => {
+                  setbuttonAvailable(true);
                   const res = e.res;
                   switch (res) {
                     case 'ok':
@@ -73,6 +76,7 @@ export default (props: P) => {
                   }
                 })
                 .catch(e => {
+                  setbuttonAvailable(true);
                   console.log(e);
                 });
             } else {
@@ -102,7 +106,7 @@ export default (props: P) => {
             </div>
 
             <div className="login-form-item-container">
-              <button type="submit" className="retro-button login-button">
+              <button type="submit" className="retro-button login-button" disabled={!buttonAvailable}>
                 LOGIN
               </button>
               <div className="login-tip">{tip}</div>

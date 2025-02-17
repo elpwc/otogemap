@@ -28,7 +28,7 @@ export default (props: P) => {
 
   const [recaptchaToken, setrecaptchaToken]: [string | null, any] = useState(null);
   const [initialValues, setinitialValues]: [any, any] = useState(defaultValues);
-  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(false);
+  const [buttonAvailable, setbuttonAvailable]: [boolean, any] = useState(true);
   const [tip, settip]: [string, any] = useState('');
   const [recaptchaLoading, setrecaptchaLoading]: [boolean, any] = useState(true);
   const [hasRequestSend, sethasRequestSend]: [boolean, any] = useState(false);
@@ -48,9 +48,11 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
+          setbuttonAvailable(false);
           if (values.password !== '' && values.password === values.password2) {
             resetPassword({ email, password: values.password })
               .then(e => {
+                setbuttonAvailable(true);
                 const res = e.res;
                 switch (res) {
                   case 'ok':
@@ -65,7 +67,9 @@ export default (props: P) => {
                     break;
                 }
               })
-              .catch(e => {});
+              .catch(e => {
+                setbuttonAvailable(true);
+              });
           } else {
             settip('Password不一致');
           }
@@ -85,7 +89,7 @@ export default (props: P) => {
                 <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回目" />
               </label>
               <div className="register-form-item-container">
-                <button type="submit" className="retro-button register-button">
+                <button type="submit" className="retro-button register-button" disabled={!buttonAvailable}>
                   RESET Password
                 </button>
                 <div className="register-tip">{tip}</div>
