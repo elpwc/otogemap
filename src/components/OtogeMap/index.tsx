@@ -15,7 +15,7 @@ import palomarker from '../../resources/markers/palo.png';
 import r1marker from '../../resources/markers/r1.png';
 import rakuichimarker from '../../resources/markers/rakuichi.png';
 import taitomarker from '../../resources/markers/taito.png';
-//import dotmarker from '../../resources/markers/dot.png';
+import dotmarker from '../../resources/markers/dot.png';
 import LeafletLocateControl from '../LeafletLocateControl';
 import JapanPreferenceSelector from '../JapanPreferenceSelector';
 import { motion } from 'framer-motion';
@@ -66,6 +66,8 @@ export default (props: P) => {
   const [currentStoreList, setcurrentStoreList] = useState([]);
   const [currentCollectionList, setcurrentCollectionList] = useState([]);
 
+  const [showCollections, setshowCollections] = useState(false);
+
   const getIcon = (type: string) => {
     switch (type) {
       case 'gigo':
@@ -93,6 +95,20 @@ export default (props: P) => {
             return maimarker;
         }
     }
+  };
+
+  const getMarkerIcon = (storeInfo: StoreInfoRequest) => {
+    if (showCollections) {
+      if (
+        currentCollectionList.findIndex((e: any) => {
+          return e.store_id === storeInfo.id;
+        }) === -1
+      ) {
+        return icon({ iconUrl: dotmarker, iconAnchor: point(5, 5) });
+      }
+      return icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(18, 44) });
+    }
+    return icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(18, 44) });
   };
 
   const toHalfWidth = (str: string) => {
@@ -151,7 +167,7 @@ export default (props: P) => {
   };
 
   const getCollectionList = () => {
-    request(`/collection.php?uid=${c_uid()}?game_version=${GameVersion2String(props.currentArea)}`, {
+    request(`/collection.php?uid=${c_uid()}&game_version=${GameVersion2String(props.currentArea)}`, {
       method: 'GET',
     })
       .then(e => {
@@ -289,8 +305,15 @@ export default (props: P) => {
                 </div>
                 <div>
                   <span style={{ userSelect: 'none' }}>
-                    <input id="showCollectionCheckbox" type="checkbox" style={{ width: 'auto' }} onChange={e => {}} />
-                    <label htmlFor="showCollectionCheckbox">表示収蔵店舗（0個）</label>
+                    <input
+                      id="showCollectionCheckbox"
+                      type="checkbox"
+                      style={{ width: 'auto' }}
+                      onChange={e => {
+                        setshowCollections(e.target.checked);
+                      }}
+                    />
+                    <label htmlFor="showCollectionCheckbox">表示収蔵店舗（{currentCollectionList.length}個）</label>
                   </span>
                 </div>
                 <Divider />
@@ -338,13 +361,16 @@ export default (props: P) => {
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {currentStoreList.map((storeInfo: StoreInfoRequest) => {
             return (
-              <Marker key={storeInfo.mapURL} position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={icon({ iconUrl: getIcon(storeInfo.type), iconAnchor: point(19, 51) })}>
-                <Popup>
+              <Marker key={storeInfo.mapURL} position={[storeInfo.lat, storeInfo.lng]} title={storeInfo.name} icon={getMarkerIcon(storeInfo)}>
+                {/** see: https://stackoverflow.com/questions/38170366/leaflet-adjust-popup-to-picture-size
+                 * 不设置为auto的话，Popup的宽度不会自适应，然而react-leaflet的<Popup>控件minWidth只接受number type，该提PR了 */
+                /*@ts-ignore */}
+                <Popup minWidth="auto">
                   <MapPopup
                     storeInfo={storeInfo}
                     onStoreUpdate={() => {
-                      // 重新获取店铺列表
                       getFilteredStoresList();
+                      getCollectionList();
                     }}
                   />
                 </Popup>

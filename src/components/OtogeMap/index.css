@@ -73,10 +73,6 @@ select {
 .arcadeAmount {
 }
 
-/* override */
-.leaflet-popup-content {
-  width: fit-content !important;
-}
 
 .popupContents {
   width: fit-content;

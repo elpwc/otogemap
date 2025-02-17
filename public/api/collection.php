@@ -30,6 +30,7 @@ switch ($request_type) {
   case 'GET':
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
     $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
+    $game_version = isset($_GET['game_version']) ? escape_string($sqllink, $_GET['game_version']) : null;
 
     if ($id) {
       $sql = "SELECT * FROM `collection` WHERE `id` = ? AND `is_deleted` = 0";
@@ -38,7 +39,7 @@ switch ($request_type) {
       $sql = "SELECT c.*, s.name as store_name, s.address , s.lat, s.lng, s.mapURL
               FROM `collection` c 
               JOIN `store` s ON c.store_id = s.id 
-              WHERE c.uid = ? AND c.is_deleted = 0";
+              WHERE c.uid = ? AND c.is_deleted = 0 AND " . (($game_version === 'ja') ? "s.country = 'Japan'" : "s.country != 'Japan'");
       $result = prepare_bind_execute($sqllink, $sql, "s", [$uid]);
     }
 
