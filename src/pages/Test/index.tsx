@@ -37,7 +37,7 @@ export default (props: P) => {
       });
       if (current_store_index === -1) {
         storeList.push({
-          id: storeList.length,
+          id: storeList.length + 1,
           name: store.name,
           desc: '',
           address: store.address || '',
@@ -61,11 +61,11 @@ export default (props: P) => {
           create_date: new Date(),
           update_date: new Date(),
         });
-        current_store_index = storeList.length - 1;
+        current_store_index = storeList.length;
       }
 
       arcadelist.push({
-        id: arcadelist.length,
+        id: arcadelist.length + 1,
         type: type,
         version_type: version_type,
         sid: current_store_index,

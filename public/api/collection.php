@@ -41,6 +41,8 @@ switch ($request_type) {
               JOIN `store` s ON c.store_id = s.id 
               WHERE c.uid = ? AND c.is_deleted = 0 AND " . (($game_version === 'ja') ? "s.country = 'Japan'" : "s.country != 'Japan'");
       $result = prepare_bind_execute($sqllink, $sql, "s", [$uid]);
+    } else {
+      return;
     }
 
     if ($result && mysqli_num_rows($result) > 0) {

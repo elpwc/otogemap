@@ -32,3 +32,5 @@ global.ts
 
 /vendor/
 /public/vendor/
+
+/tools/update_db/private.py

@@ -58,6 +58,7 @@ switch ($request_type) {
 
     // 店铺属性筛选
     $store_type = isset($_GET['type']) ? escape_string($sqllink, $_GET['type']) : null;
+    $area = isset($_GET['area']) ? escape_string($sqllink, $_GET['area']) : null;
     $country = isset($_GET['country']) ? escape_string($sqllink, $_GET['country']) : null;
     $adminlv1 = isset($_GET['adminlv1']) ? escape_string($sqllink, $_GET['adminlv1']) : null;
     $business_hours_start = isset($_GET['business_hours_start']) ? (int)$_GET['business_hours_start'] : null;
@@ -77,16 +78,16 @@ switch ($request_type) {
               FROM `store` s 
               LEFT JOIN `arcade` a ON s.id = a.sid 
               LEFT JOIN `collection` c ON s.id = c.store_id AND c.is_deleted = 0";
-      
+
       if ($uid) {
         $sql .= " AND c.uid = ?";
       }
-      
+
       $sql .= " WHERE s.id = ? AND s.is_deleted = 0";
-      
+
       $params = [];
       $types = "";
-      
+
       if ($uid) {
         $params[] = $uid;
         $types .= "s";
@@ -116,16 +117,16 @@ switch ($request_type) {
               FROM `store` s 
               LEFT JOIN `arcade` a ON s.id = a.sid 
               LEFT JOIN `collection` c ON s.id = c.store_id AND c.is_deleted = 0";
-      
+
       if ($uid) {
         $sql .= " AND c.uid = ?";
       }
-      
+
       $sql .= " WHERE s.is_deleted = 0";
-      
+
       $params = [];
       $types = "";
-      
+
       if ($uid) {
         $params[] = $uid;
         $types .= "s";
@@ -147,6 +148,15 @@ switch ($request_type) {
       if ($store_type) {
         $sql .= " AND s.type = ?";
         $params[] = $store_type;
+        $types .= "s";
+      }
+      if ($area) {
+        if ($area === 'ja') {
+          $sql .= " AND s.country = 'Japan'";
+        } else {
+          $sql .= " AND s.country != 'Japan'";
+        }
+        $params[] = $country;
         $types .= "s";
       }
       if ($country) {
