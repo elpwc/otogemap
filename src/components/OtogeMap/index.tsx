@@ -177,19 +177,25 @@ export default (props: P) => {
     <>
       <div style={{ height: '100%', width: '100%', position: 'relative' }}>
         <div id="search_container">
-          <input
-            className="searchInput"
-            type="text"
-            placeholder="Search & Filter.."
-            value={searchKeyword}
-            onClick={() => {
-              c_showfilter('true');
-              setfilterOpen(true);
-            }}
-            onChange={e => {
-              setsearchKeyword(e.target.value);
-            }}
-          />
+          <div className="flex searchInputContainer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+            <input
+              className="searchInput"
+              type="text"
+              placeholder={'Search & Filter..'}
+              value={searchKeyword}
+              onClick={() => {
+                c_showfilter('true');
+                setfilterOpen(true);
+              }}
+              onChange={e => {
+                setsearchKeyword(e.target.value);
+              }}
+            />
+          </div>
+
           {filterOpen ? (
             <motion.div key={'filter'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} style={{ width: '-webkit-fill-available' }}>
               <div className="filter">
