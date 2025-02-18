@@ -32,7 +32,7 @@ export default (props: P) => {
             地図
           </p>
           <p className="updateMsg">店舗情報最近更新：2025/1/8</p>
-          <p className="updateMsg">Website最近更新：2025/2/17</p>
+          <p className="updateMsg">Website最近更新：2025/2/18</p>
           <p>
             Dev&Maintain：
             <a href="https://www.elpwc.com/" target="_blank">
