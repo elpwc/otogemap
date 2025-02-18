@@ -18,8 +18,5 @@ function verify_recaptcha($token)
   );
   $context = stream_context_create($options);
   $result = file_get_contents($url, false, $context);
-  error_log(114514);
-  error_log(($result));
-  error_log(json_decode($result)->error_codes);
   return json_decode($result)->success;
 }
